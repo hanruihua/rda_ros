@@ -71,7 +71,7 @@ If you find this code or paper is helpful, you can **star** this repository and 
 
 ```
 @article{li2023edge,
-  title={Edge Accelerated Robot Navigation with Collaborative Motion Planning},
+  title={Edge Accelerated Robot Navigation With Collaborative Motion Planning},
   author={Li, Guoliang and Han, Ruihua and Wang, Shuai and Gao, Fei and Eldar, Yonina C and Xu, Chengzhong},
   journal={IEEE/ASME Transactions on Mechatronics},
   year={2024},

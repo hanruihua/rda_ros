@@ -52,12 +52,6 @@ class rda_core:
 
         robot_info_tuple = self.generate_robot_tuple(robot_info)
 
-
-
-        
-
-
-
         self.listener = tf.TransformListener()
 
 

@@ -9,7 +9,8 @@ from collections import namedtuple
 from RDA_planner.mpc import MPC
 from math import atan2
 from gctl.curve_generator import curve_generator
-
+from sklearn.cluster import DBSCAN
+from sensor_msgs.msg import LaserScan
 
 robot_tuple = namedtuple('robot_tuple', 'G h cone_type wheelbase max_speed max_acce dynamics')
 rda_obs_tuple = namedtuple('rda_obs_tuple', 'center radius vertex cone_type velocity') # vertex: 2*number of vertex
@@ -34,6 +35,7 @@ class rda_core:
         sample_time = rospy.get_param('sample_time', 0.1)
         process_num = rospy.get_param('process_num', 4)
         iter_threshold = rospy.get_param('iter_threshold', 0.2)
+        use_scan_obstacle = rospy.get_param('use_scan_obstacle', False)
 
         self.ref_speed = rospy.get_param('ref_speed', 4.0) # ref speed
         slack_gain = rospy.get_param('slack_gain', 8)
@@ -74,7 +76,11 @@ class rda_core:
         self.arrive_flag = False
 
         # subscribe
-        rospy.Subscriber('/rda_obstacles', ObstacleArrayMsg, self.obstacle_callback)
+        if not use_scan_obstacle:
+            rospy.Subscriber('/rda_obstacles', ObstacleArrayMsg, self.obstacle_callback)
+        else:
+            rospy.Subscriber('/scan', LaserScan, self.scan_callback)
+
         rospy.Subscriber('/odom', Odometry, self.odom_callback)
         rospy.Subscriber('/ref_path', Path, self.path_callback)
         rospy.Subscriber('move_base_simple_goal', PoseStamped, self.goal_callback)
@@ -205,6 +211,53 @@ class rda_core:
         new_state[2, 0] = temp_state[2, 0] + raw
 
         self.robot_state = new_state
+
+
+    def scan_callback(self, scan_data):
+        pass
+
+    
+    # def scan_box(state, scan_data):
+
+    # ranges = np.array(scan_data['ranges'])
+    # angles = np.linspace(scan_data['angle_min'], scan_data['angle_max'], len(ranges))
+
+    # point_list = []
+    # obstacle_list = []
+
+    # for i in range(len(ranges)):
+    #     scan_range = ranges[i]
+    #     angle = angles[i]
+
+    #     if scan_range < ( scan_data['range_max'] - 0.01):
+    #         point = np.array([ [scan_range * np.cos(angle)], [scan_range * np.sin(angle)]  ])
+    #         point_list.append(point)
+
+    # if len(point_list) < 4:
+    #     return obstacle_list
+
+    # else:
+    #     point_array = np.hstack(point_list).T
+    #     labels = DBSCAN(eps=2.0, min_samples=6).fit_predict(point_array)
+
+    #     for label in np.unique(labels):
+    #         if label == -1:
+    #             continue
+    #         else:
+    #             point_array2 = point_array[labels == label]
+    #             rect = cv2.minAreaRect(point_array2.astype(np.float32))
+    #             box = cv2.boxPoints(rect)
+
+    #             vertices = box.T
+
+    #             trans = state[0:2]
+    #             rot = state[2, 0]
+    #             R = np.array([[np.cos(rot), -np.sin(rot)], [np.sin(rot), np.cos(rot)]])
+    #             global_vertices = trans + R @ vertices
+
+    #             obstacle_list.append(obs(None, None, global_vertices, 'Rpositive', 0))
+
+    #     return obstacle_list
 
 
 

@@ -214,9 +214,28 @@ class rda_core:
 
 
     def scan_callback(self, scan_data):
-        pass
 
-    
+        ranges = np.array(scan_data.ranges)
+        angles = np.linspace(scan_data.angle_min, scan_data.angle_max, len(ranges))
+        
+        point_list = []
+
+        for i in range(len(ranges)):
+            scan_range = ranges[i]
+            angle = angles[i]
+
+            if scan_range < ( scan_data.range_max - 0.01):
+                point = np.array([ [scan_range * np.cos(angle)], [scan_range * np.sin(angle)]  ])
+                point_list.append(point)
+        
+        if len(point_list) < 3 or self.robot_state is None:
+            rospy.loginfo_throttle(1, 'No obstacles are converted to polygon') 
+            return
+        
+
+        
+
+
     # def scan_box(state, scan_data):
 
     # ranges = np.array(scan_data['ranges'])

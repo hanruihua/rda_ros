@@ -11,6 +11,8 @@ from math import atan2
 from gctl.curve_generator import curve_generator
 from sklearn.cluster import DBSCAN
 from sensor_msgs.msg import LaserScan
+import cv2
+from ir_sim.util.util import get_transform
 
 robot_tuple = namedtuple('robot_tuple', 'G h cone_type wheelbase max_speed max_acce dynamics')
 rda_obs_tuple = namedtuple('rda_obs_tuple', 'center radius vertex cone_type velocity') # vertex: 2*number of vertex
@@ -28,16 +30,24 @@ class rda_core:
         rospy.init_node('rda_node', anonymous=True)
 
         # ros parameters
+
+        ## robot info
         robot_info = rospy.get_param('robot_info', {'vertices': None, 'radius': None, 'max_speed': [10, 1], 'max_acce': [10, 0.5], 'length': 2, 'width': 1, 'wheelbase': 1.5, 'dynamics': 'diff', 'cone_type': 'Rpositive'})
+
+        ## For MPC
         receding = rospy.get_param('receding', 10)
         iter_num = rospy.get_param('iter_num', 3)
         enable_reverse = rospy.get_param('enable_reverse', False)
         sample_time = rospy.get_param('sample_time', 0.1)
         process_num = rospy.get_param('process_num', 4)
         iter_threshold = rospy.get_param('iter_threshold', 0.2)
-        use_scan_obstacle = rospy.get_param('use_scan_obstacle', False)
-
+        obstacle_order=rospy.get_param('obstacle_order', True)
+        self.max_obstacle_num = rospy.get_param('max_obs_num', 4)
+        self.max_edge_num = rospy.get_param('max_edge_num', 5)
+        self.goal_threshold = rospy.get_param('goal_threshold', 0.2)
         self.ref_speed = rospy.get_param('ref_speed', 4.0) # ref speed
+
+        ## Tune parameters
         slack_gain = rospy.get_param('slack_gain', 8)
         max_sd = rospy.get_param('max_sd', 1.0)
         min_sd = rospy.get_param('min_sd', 0.1)
@@ -46,32 +56,35 @@ class rda_core:
         ro1 = rospy.get_param('ro1', 200)
         ro2 = rospy.get_param('ro2', 1.0)
 
-        obstacle_order=rospy.get_param('obstacle_order', True)
-        self.target_frame = rospy.get_param('target_frame', '/map')
-        self.max_obstacle_num = rospy.get_param('max_obs_num', 4)
-        self.max_edge_num = rospy.get_param('max_edge_num', 5)
-        self.goal_threshold = rospy.get_param('goal_threshold', 0.2)
+        ## for scan
+        use_scan_obstacle = rospy.get_param('use_scan_obstacle', False)
+        self.scan_eps = rospy.get_param('scan_eps', 0.2)
+        self.scan_min_samples = rospy.get_param('scan_min_samples', 6)
+        lidar_offset_para = rospy.get_param('lidar_offset', '0.0 0.0 0.0 0.0 0.0 0.0') # x y z yaw pitch roll
+        self.lidar_offset = np.fromstring(lidar_offset_para, dtype=np.float32, sep=' ')
+        x, y, z, yaw, pitch, roll = self.lidar_offset
+        self.l_trans, self.l_R = get_transform(np.c_[x, y, yaw].reshape(3, 1))
+        # self.marker_color = rospy.get_param('marker_color', 'red')
+
+        ## for reference path
         self.waypoints = rospy.get_param('waypoints', [])
         self.loop = rospy.get_param('loop', False)
         self.curve_type = rospy.get_param('curve_type', 'dubins')
         self.step_size = rospy.get_param('step_size', 0.1)
         self.min_radius = rospy.get_param('min_radius', 1.0)
 
+        ## for frame
+        self.target_frame = rospy.get_param('target_frame', 'map')
+
+        # initialize
         self.robot_state = None
         self.obstacle_list = []
-        # self.ref_path_list = []
-
         self.cg = curve_generator()
-
+        self.listener = tf.TransformListener()
+        self.ref_path_list = self.generate_ref_path_list()
         robot_info_tuple = self.generate_robot_tuple(robot_info)
 
-        self.listener = tf.TransformListener()
-
-        self.ref_path_list = self.generate_ref_path_list()
-
-        # print(self.ref_path_list[0].shape)
-
-        self.rda_opt = MPC(robot_info_tuple, self.ref_path_list, receding, sample_time, iter_num, enable_reverse, True, process_num=process_num, iter_threshold=iter_threshold, slack_gain=slack_gain, max_sd=max_sd, min_sd=min_sd, ws=ws, wu=wu, ro1=ro1, ro2=ro2, obstacle_order=obstacle_order, max_edge_num=self.max_edge_num, max_obs_num=self.max_obstacle_num)
+        self.rda_opt = MPC(robot_info_tuple, self.ref_path_list, receding, sample_time, iter_num, enable_reverse, False, process_num=process_num, iter_threshold=iter_threshold, slack_gain=slack_gain, max_sd=max_sd, min_sd=min_sd, ws=ws, wu=wu, ro1=ro1, ro2=ro2, obstacle_order=obstacle_order, max_edge_num=self.max_edge_num, max_obs_num=self.max_obstacle_num)
 
         self.arrive_flag = False
 
@@ -154,7 +167,7 @@ class rda_core:
                 center = np.array([[vertex[0].x], [vertex[0].y]])
                 radius = obstacles.radius
                 
-                linear, angular = obstacles.velocity.Twist.linear.x, obstacles.velocity.Twist.angular.z
+                linear, angular = obstacles.velocities.twist.linear.x, obstacles.velocities.twist.angular.z
                 velocity = np.array([[linear], [angular]])
 
                 circle_obs = rda_obs_tuple(center, radius, None, 'norm2', velocity)
@@ -232,53 +245,27 @@ class rda_core:
             rospy.loginfo_throttle(1, 'No obstacles are converted to polygon') 
             return
         
+        else:
+            point_array = np.hstack(point_list).T
+            labels = DBSCAN(eps=self.scan_eps, min_samples=self.scan_min_samples).fit_predict(point_array)
 
-        
+            self.obstacle_list = []
 
+            for label in np.unique(labels):
+                if label == -1:
+                    continue
+                else:
+                    point_array2 = point_array[labels == label]
+                    rect = cv2.minAreaRect(point_array2.astype(np.float32))
+                    box = cv2.boxPoints(rect)
 
-    # def scan_box(state, scan_data):
+                    vertices = box.T
 
-    # ranges = np.array(scan_data['ranges'])
-    # angles = np.linspace(scan_data['angle_min'], scan_data['angle_max'], len(ranges))
+                    temp_vertices = self.l_R @ vertices + self.l_trans
+                    r_trans, r_R = get_transform(self.robot_state)
+                    global_vertices = r_trans + r_R @ temp_vertices
 
-    # point_list = []
-    # obstacle_list = []
-
-    # for i in range(len(ranges)):
-    #     scan_range = ranges[i]
-    #     angle = angles[i]
-
-    #     if scan_range < ( scan_data['range_max'] - 0.01):
-    #         point = np.array([ [scan_range * np.cos(angle)], [scan_range * np.sin(angle)]  ])
-    #         point_list.append(point)
-
-    # if len(point_list) < 4:
-    #     return obstacle_list
-
-    # else:
-    #     point_array = np.hstack(point_list).T
-    #     labels = DBSCAN(eps=2.0, min_samples=6).fit_predict(point_array)
-
-    #     for label in np.unique(labels):
-    #         if label == -1:
-    #             continue
-    #         else:
-    #             point_array2 = point_array[labels == label]
-    #             rect = cv2.minAreaRect(point_array2.astype(np.float32))
-    #             box = cv2.boxPoints(rect)
-
-    #             vertices = box.T
-
-    #             trans = state[0:2]
-    #             rot = state[2, 0]
-    #             R = np.array([[np.cos(rot), -np.sin(rot)], [np.sin(rot), np.cos(rot)]])
-    #             global_vertices = trans + R @ vertices
-
-    #             obstacle_list.append(obs(None, None, global_vertices, 'Rpositive', 0))
-
-    #     return obstacle_list
-
-
+                    self.obstacle_list.append(rda_obs_tuple(None, None, global_vertices, 'Rpositive', 0))
 
     def path_callback(self, data):
         pass
@@ -314,21 +301,23 @@ class rda_core:
 
             marker.color.a = 1.0
             marker.color.r = 0.0
-            marker.color.g = 1.0
-            marker.color.b = 0.0
+            marker.color.g = 0.0
+            marker.color.b = 1.0
 
             # breakpoint()
 
-            temp_matrix = np.hstack((obs.vertex, obs.vertex[:, 0:1])) 
-            for i in range(temp_matrix.shape[1] - 1):
-                vp = temp_matrix[:, i]
-                vp1 = temp_matrix[:, i+1]
+            if obs.vertex is not None:
 
-                marker.points.append(Point(vp[0], vp[1], 0))
-                marker.points.append(Point(vp1[0], vp1[1], 0))
+                temp_matrix = np.hstack((obs.vertex, obs.vertex[:, 0:1])) 
+                for i in range(temp_matrix.shape[1] - 1):
+                    vp = temp_matrix[:, i]
+                    vp1 = temp_matrix[:, i+1]
 
-            marker.id = obs_index
-            marker_array.markers.append(marker)
+                    marker.points.append(Point(vp[0], vp[1], 0))
+                    marker.points.append(Point(vp1[0], vp1[1], 0))
+
+                marker.id = obs_index
+                marker_array.markers.append(marker)
 
         return marker_array
 
@@ -462,4 +451,5 @@ class rda_core:
             h[i, 0] = c 
     
         return G, h
+    
     

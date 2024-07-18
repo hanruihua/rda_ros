@@ -319,6 +319,12 @@ class rda_core:
                 marker.id = obs_index
                 marker_array.markers.append(marker)
 
+        
+        
+
+
+        
+
         return marker_array
 
 

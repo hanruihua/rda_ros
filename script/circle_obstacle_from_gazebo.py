@@ -4,14 +4,14 @@ from gazebo_msgs.msg import ModelStates
 from costmap_converter.msg import ObstacleArrayMsg, ObstacleMsg
 
 
-radius = 0.05
+model_radius = 0.05
 model_name = 'agent'
 obstacles_msg = ObstacleArrayMsg()
 
 
 def obs_state_callback(data):
     
-    global model_name, radius, obstacles
+    global model_name, model_radius, obstacles
 
     obstacles_msg.obstacles = []
 
@@ -19,7 +19,7 @@ def obs_state_callback(data):
         if model_name in name:
 
             obstacle = ObstacleMsg()
-            obstacle.radius = radius
+            obstacle.radius = model_radius
             obstacle.polygon.points.append(data.pose[index].position)
             obstacle.velocities.twist = data.twist[index]
 
@@ -27,7 +27,7 @@ def obs_state_callback(data):
 
 if __name__ == '__main__':
 
-    radius = rospy.get_param('radius', 0.05)
+    model_radius = rospy.get_param('model_radius', 0.05)
     model_name = rospy.get_param('model_name', 'agent')
 
     rospy.init_node('rda_node', anonymous=True)

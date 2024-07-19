@@ -95,8 +95,8 @@ class rda_core:
             rospy.Subscriber('/scan', LaserScan, self.scan_callback)
 
         rospy.Subscriber('/odom', Odometry, self.odom_callback)
-        rospy.Subscriber('/ref_path', Path, self.path_callback)
-        rospy.Subscriber('move_base_simple_goal', PoseStamped, self.goal_callback)
+        # rospy.Subscriber('/coarse_path', Path, self.path_callback)
+        # rospy.Subscriber('/move_base_simple_goal', PoseStamped, self.goal_callback)
 
 
     def control(self):
@@ -267,12 +267,12 @@ class rda_core:
 
                     self.obstacle_list.append(rda_obs_tuple(None, None, global_vertices, 'Rpositive', 0))
 
-    def path_callback(self, data):
-        pass
+    # def path_callback(self, data):
+    #     pass
 
 
-    def goal_callback(self, data):
-        pass
+    # def goal_callback(self, data):
+    #     pass
     
 
     def generate_ref_path_list(self):
@@ -291,13 +291,13 @@ class rda_core:
     
         marker_array = MarkerArray()
 
+        # obs: center, radius, vertex, cone_type, velocity
+
         for obs_index, obs in enumerate(obs_list):
             marker = Marker()
             marker.header.frame_id = self.target_frame
-            marker.type = marker.LINE_LIST
+            
             marker.header.stamp = rospy.get_rostime()
-
-            marker.scale.x = 0.05
 
             marker.color.a = 1.0
             marker.color.r = 0.0
@@ -307,6 +307,10 @@ class rda_core:
             # breakpoint()
 
             if obs.vertex is not None:
+
+                marker.type = marker.LINE_LIST
+
+                marker.scale.x = 0.05
 
                 temp_matrix = np.hstack((obs.vertex, obs.vertex[:, 0:1])) 
                 for i in range(temp_matrix.shape[1] - 1):
@@ -318,13 +322,23 @@ class rda_core:
 
                 marker.id = obs_index
                 marker_array.markers.append(marker)
+            
+            else:
+                marker.type = marker.CYLINDER
+
+                center = obs.center
+                marker.scale.x = obs.radius * 2
+                marker.scale.y = obs.radius * 2
+                marker.scale.z = 0.2
+
+                marker.pose.position.x = center[0, 0]
+                marker.pose.position.y = center[1, 0]
+
+                marker.id = obs_index
+
+                marker_array.markers.append(marker)
 
         
-        
-
-
-        
-
         return marker_array
 
 

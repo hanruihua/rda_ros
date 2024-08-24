@@ -20,15 +20,22 @@ pip install -e .
 ```
 
 
-## Installation
+## Build
 
 ```
-
-
+cd catkin_ws
+catkin_make 
 ```
 
 ## Topics
 
+- Subscribed topic:
+  - '/tf'
+  - 'scan'
+  - 
+
+- Published topic:
+  - '/cmd_vel'
 
 ## Parameters
 

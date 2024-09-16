@@ -12,7 +12,7 @@ from gctl.curve_generator import curve_generator
 from sklearn.cluster import DBSCAN
 from sensor_msgs.msg import LaserScan
 import cv2
-from ir_sim.util.util import get_transform
+from irsim.util.util import get_transform
 
 robot_tuple = namedtuple('robot_tuple', 'G h cone_type wheelbase max_speed max_acce dynamics')
 rda_obs_tuple = namedtuple('rda_obs_tuple', 'center radius vertex cone_type velocity') # vertex: 2*number of vertex

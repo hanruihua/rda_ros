@@ -1,0 +1,52 @@
+<launch>
+
+    <arg name="robot_namespace" default="/"/>
+    <arg name="world_name" default="$(find rda_ros)/example/dynamic_collision_avoidance/world/gazebo_world_20.world"/>
+    
+     <!-- initial pose -->
+    <arg name="x" default="0.0"/>
+    <arg name="y" default="0.0"/>
+    <arg name="z" default="0.0"/>
+    <arg name="yaw" default="0.0"/>
+
+    <rosparam command="load" file = "$(find rda_ros)/example/dynamic_collision_avoidance/configure/rvo_config_20.yaml"/>
+
+    <node name="rvo_node" pkg="rvo_ros" type="rvo_node">
+        <remap from="/rvo/model_states" to="/gazebo/model_states"/>
+        <remap from="/rvo_vel" to="/obstacles_velocity"/>
+    </node>
+
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name" value="$(arg world_name)"/>
+        <arg name="paused" value="false"/>
+        <arg name="use_sim_time" value="true"/>
+        <arg name="gui" value="true"/>
+        <arg name="headless" value="false"/>
+        <arg name="debug" value="false"/>
+    </include>
+
+    <param name="robot_description" command="$(find xacro)/xacro '$(find limo_description)/urdf/limo_four_diff.xacro'
+        robot_namespace:=$(arg robot_namespace)" />
+
+    <node name="spawn_limo_model" pkg="gazebo_ros" type="spawn_model" args="-x $(arg x)
+              -y $(arg y)
+              -z $(arg z)
+              -Y $(arg yaw)
+              -unpause
+              -urdf
+              -param robot_description
+              -model 'limo$(arg robot_namespace)'" />
+
+    <!-- Load joint controller configurations from YAML file to parameter server -->
+    <rosparam file="$(find limo_gazebo_sim)/config/limo_four_diff_control.yaml" command="load"/>
+
+    <!-- load the controllers -->
+    <node name="controller_spawner" pkg="controller_manager" type="spawner"
+          respawn="false" output="screen" args="limo_state_controller "/>
+
+    <node name="rvo_ros" pkg="rvo_ros" type="set_goals_client" args="random 1.0 4.0 -3.0 3.0"/>
+
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <!-- <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" /> -->
+
+</launch>

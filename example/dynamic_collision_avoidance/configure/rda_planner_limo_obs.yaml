@@ -1,0 +1,54 @@
+robot_info: 
+  max_speed: [1, 3.14]
+  max_acce: [1, 3.14]
+  length: 0.322
+  width: 0.22
+  wheelbase: 0
+  dynamics: diff
+  cone_type: Rpositive
+
+# for MPC parameters
+receding: 5
+iter_num: 2
+enable_reverse: false
+sample_time: 0.3
+process_num: 4
+accelerated: True
+time_print: False
+obstacle_order: True
+max_edge_num: 4
+max_obs_num: 6
+goal_index_threshold: 1
+
+# Tune parameters
+iter_threshold: 0.2
+slack_gain: 10
+max_sd: 0.2
+min_sd: 0.01
+ws: 0.3
+wu: 10.0
+ro1: 200
+ro2: 1.0
+
+# reference speed
+ref_speed: 0.3
+
+# do not use scan
+use_scan_obstacle: false
+# scan_eps: 0.2
+# scan_min_samples: 3
+
+# for reference path
+waypoints: [[0, 0, 0], [5, 0, 0], [0, 0, 0]]
+loop: True
+curve_type: 'line'
+step_size: 0.05
+min_radius: 0.0
+
+# for frame
+target_frame: odom
+base_frame: base_link
+
+
+
+

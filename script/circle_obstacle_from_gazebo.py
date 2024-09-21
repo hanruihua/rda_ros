@@ -30,7 +30,7 @@ if __name__ == '__main__':
     model_radius = rospy.get_param('model_radius', 0.05)
     model_name = rospy.get_param('model_name', 'agent')
 
-    rospy.init_node('rda_node', anonymous=True)
+    rospy.init_node('gazebo_rda_convert_node', anonymous=True)
     rospy.Subscriber('gazebo/model_states', ModelStates, obs_state_callback)
     obs_pub = rospy.Publisher('rda_obstacles', ObstacleArrayMsg, queue_size=10)
 
@@ -43,7 +43,7 @@ if __name__ == '__main__':
             continue
         else:
             obs_pub.publish(obstacles_msg)
-            rospy.loginfo_throttle(1, 'Publish rda obstacles successfully') 
+            rospy.loginfo_throttle(5, 'Publish rda obstacles successfully') 
 
         rate.sleep()
 

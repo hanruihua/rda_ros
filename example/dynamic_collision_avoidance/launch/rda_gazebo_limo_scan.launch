@@ -1,0 +1,12 @@
+<launch>     
+    <arg name="rda_configure_file" default="$(find rda_ros)/example/dynamic_collision_avoidance/configure/rda_planner_limo_scan.yaml"/>
+
+    <node name='rda_control' pkg="rda_ros" type="rda_node.py" output="screen">
+        <remap from="/rda_cmd_vel" to="/cmd_vel"/>
+        <remap from="/scan" to="/limo/scan"/>
+        <rosparam command="load" file="$(arg rda_configure_file)" />
+    </node>
+
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find rda_ros)/example/dynamic_collision_avoidance/rviz/rda_gazebo_limo_scan.rviz" />
+
+</launch>

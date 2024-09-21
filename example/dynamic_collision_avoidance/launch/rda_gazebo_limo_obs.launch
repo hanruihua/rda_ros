@@ -1,0 +1,26 @@
+<launch>     
+    <arg name="rda_configure_file" default="$(find rda_ros)/example/dynamic_collision_avoidance/configure/rda_planner_limo_obs.yaml"/>
+
+    <!-- obtain obstacle model -->
+    <node name='circle_obstacle' pkg="rda_ros" type="circle_obstacle_from_gazebo.py">
+        <param name="model_name" value="agent"/>
+         <param name="model_radius" value='0.05'/>
+    </node>
+
+    <!-- rda control -->
+    <node name='rda_control' pkg="rda_ros" type="rda_node.py">
+        <rosparam command="load" file="$(arg rda_configure_file)" />
+        <remap from="/rda_cmd_vel" to="/cmd_vel"/>
+    </node>
+
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find rda_ros)/example/dynamic_collision_avoidance/rviz/rda_gazebo_limo_obs.rviz" />
+
+</launch>
+
+
+    
+    
+
+    
+
+    

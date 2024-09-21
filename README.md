@@ -1,23 +1,17 @@
 # rda_ros
-ROS Wrapper of RDA planner
 
-
-## Environment
-
-- Ubuntu 20.04
-- ROS Noetic
-- Python >= 3.8
-
+This is the ROS Wrapper of the [RDA planner](https://github.com/hanruihua/RDA-planner)
 
 ## Preqrequisite
 
+Please install the RDA planner first.
+
+- Python >= 3.8
+- ROS Noetic
 - [RDA_planner](https://github.com/hanruihua/RDA_planner)
 
-```
-git clone https://github.com/hanruihua/RDA_planner.git
-cd RDA_planner
-pip install -e .
-```
+## Test Environment 
+- Ubuntu 20.04
 
 
 ## Installation
@@ -28,11 +22,16 @@ pip install -e .
 ```
 
 
+## Node API
 
-## Topics
+### Published Topics
 
 
-## Parameters
+
+### Subscribed Topics
+
+
+### Parameters
 
 
 
@@ -50,11 +49,9 @@ pip install -e .
 https://github.com/hanruihua/rda_ros/assets/16113200/68c584eb-8a4a-4618-b0cd-d76c0ef37a1e
 
 
-
-
 ## Citation
 
-If you find this code or paper is helpful, you can **star** this repository and cite our papers by the following **BibTeX** entries:
+If you find this code or paper helpful, please consider starring the repository and citing our work using the following BibTeX entries:
 
 ```
   @ARTICLE{10036019,
@@ -80,7 +77,7 @@ If you find this code or paper is helpful, you can **star** this repository and 
 ```
 
 
-## Maintainers
+## Contact
 
 [Ruihua Han](https://github.com/hanruihua)
 

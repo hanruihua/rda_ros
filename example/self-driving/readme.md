@@ -10,17 +10,16 @@ Please install the following packages first.
 
 ## Run examples
 
-First start the Carla simulator
+- start the Carla simulator
 
 ```
-cd $CARLA_ROOT
-./CarlaUE4.sh
+cd $CARLA_ROOT && ./CarlaUE4.sh
 ```
 
-Second run the Carla ROS bridge to configure the environment
+- run the Carla ROS bridge to configure the environment
 
 ```
-roslaunch rda_ros 
+roslaunch rda_ros run_carla_Town04.launch
 ```
 
 

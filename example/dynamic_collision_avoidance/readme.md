@@ -5,8 +5,9 @@
 
 Please install the following packages first.
 
-[rvo_ros](https://github.com/hanruihua/rvo_ros)
-[limo_ros](https://github.com/hanruihua/limo_ros)
+- [rvo_ros](https://github.com/hanruihua/rvo_ros)
+
+- [limo_ros](https://github.com/hanruihua/limo_ros)
 
 
 ## Run examples

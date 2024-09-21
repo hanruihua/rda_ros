@@ -85,7 +85,6 @@ class rda_core:
         self.scan_min_samples = rospy.get_param("~scan_min_samples", 6)
 
         ## for reference paths
-        self.reference_path_mode = rospy.get_param("~reference_path_mode", 0)
         self.waypoints = rospy.get_param("~waypoints", [])
         self.loop = rospy.get_param("~loop", False)
         self.curve_type = rospy.get_param("~curve_type", "dubins")
@@ -97,12 +96,16 @@ class rda_core:
         self.lidar_frame = rospy.get_param("~lidar_frame", "lidar_link")
         self.base_frame = rospy.get_param("~base_frame", "base_link")
 
+        # for visualization
+        self.marker_x = rospy.get_param("~marker_x", 0.05)
+        self.marker_lifetime = rospy.get_param("~marker_lifetime", 0.1)
+
         # initialize
         self.robot_state = None
         self.obstacle_list = []
         self.cg = curve_generator()
         self.listener = tf.TransformListener()
-        self.ref_path_list = self.generate_ref_path_list()
+        self.ref_path_list = self.generate_ref_path_list()   # generate the initial reference path
         robot_info_tuple = self.generate_robot_tuple(robot_info)
 
         self.rda_opt = MPC(
@@ -145,15 +148,8 @@ class rda_core:
 
             self.l_trans, self.l_R = get_transform(np.array([x, y, yaw]).reshape(3, 1))
 
-        rospy.Subscriber("/move_base_simple_goal", PoseStamped, self.rviz_goal_callback)
 
-        if self.reference_path_mode == 1:
-            rospy.Subscriber("/reference_path", Path, self.path_callback)
-
-        elif self.reference_path_mode == 2:
-            # read from csv file
-            pass
-
+        rospy.Subscriber("/rda_sub_path", Path, self.path_callback)
         self.listener = tf.TransformListener()
 
         # rospy.Subscriber('/coarse_path', Path, self.path_callback)
@@ -169,30 +165,24 @@ class rda_core:
             if self.robot_state is None:
                 rospy.loginfo_throttle(1, "waiting for robot states")
                 continue
-
-            if not self.ref_path_list:
-
-                if self.reference_path_mode == 0:
-                    rospy.loginfo_throttle(
-                        1, "waiting for reference path, waypoints are not set"
-                    )
-                    continue
-
-                elif self.reference_path_mode == 1:
-                    rospy.loginfo_throttle(
-                        1, "waiting for reference path, no topic '' "
-                    )
-                    continue
-
-            else:
-                ref_path = self.convert_to_path(self.ref_path_list)
-                self.ref_path_pub.publish(ref_path)
-
+            
             if len(self.obstacle_list) == 0:
                 rospy.loginfo_throttle(1, "No obstacles, perform path tracking")
             else:
                 rda_obs_markers = self.convert_to_markers(self.obstacle_list)
                 self.obs_pub.publish(rda_obs_markers)
+
+            if not self.ref_path_list:
+
+                rospy.loginfo_throttle(
+                    1, "waiting for reference path, topic '/rda_ref_path' "
+                )
+                continue
+
+            else:
+                ref_path = self.convert_to_path(self.ref_path_list)
+                self.ref_path_pub.publish(ref_path)
+
 
             if self.max_obstacle_num == 0:
                 opt_vel, info = self.rda_opt.control(
@@ -283,8 +273,8 @@ class rda_core:
                 vertexes = np.hstack(vertex_list)
 
                 linear, angular = (
-                    obstacles.velocity.Twist.linear.x,
-                    obstacles.velocity.Twist.angular.z,
+                    obstacles.velocities.twist.linear.x,
+                    obstacles.velocities.twist.angular.z,
                 )
                 velocity = np.array([[linear], [angular]])
 
@@ -294,27 +284,7 @@ class rda_core:
 
         self.obstacle_list[:] = temp_obs_list[:]
 
-    def rviz_goal_callback(self, goal):
-
-        # generate reference line by rviz goal
-
-        goal_x = goal.pose.position.x
-        goal_y = goal.pose.position.y
-        theta = rda_core.quat_to_yaw(goal.pose.orientation)
-
-        self.goal = np.array([[goal_x], [goal_y], [theta]])
-
-        self.waypoints = [self.robot_state, self.goal]
-
-        self.ref_path_list = self.cg.generate_curve(
-            "line", self.waypoints, 0.1, 0, include_gear=False
-        )
-
-        self.rda_opt.update_ref_path(self.ref_path_list)
-
     def path_callback(self, path):
-
-        self.way_points = []
 
         for p in path.poses:
             x = p.pose.position.x
@@ -324,10 +294,8 @@ class rda_core:
             points = np.array([x, y, theta]).reshape(3, 1)
             self.ref_path_list.append(points)
 
-        if self.rda_opt.no_ref_path():
-
-            rospy.loginfo_throttle(0.1, "target path update")
-            self.rda_opt.update_ref_path(self.ref_path_list)
+        rospy.loginfo_throttle(0.1, "target path update")
+        self.rda_opt.update_ref_path(self.ref_path_list)
 
     def scan_callback(self, scan_data):
 
@@ -409,7 +377,7 @@ class rda_core:
             marker.color.g = 0.0
             marker.color.b = 1.0
 
-            marker.lifetime = rospy.Duration(0.1)
+            marker.lifetime = rospy.Duration(self.marker_lifetime)
 
             # breakpoint()
 
@@ -417,7 +385,7 @@ class rda_core:
 
                 marker.type = marker.LINE_LIST
 
-                marker.scale.x = 0.05
+                marker.scale.x = self.marker_x
 
                 temp_matrix = np.hstack((obs.vertex, obs.vertex[:, 0:1]))
                 for i in range(temp_matrix.shape[1] - 1):
@@ -429,7 +397,7 @@ class rda_core:
 
                 marker.id = obs_index
                 marker_array.markers.append(marker)
-
+        
             else:
                 marker.type = marker.CYLINDER
 

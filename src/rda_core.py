@@ -139,25 +139,24 @@ class rda_core:
             trans, rot = self.listener.lookupTransform(
                 self.target_frame, self.lidar_frame, rospy.Time(0)
             )
-            
-            yaw = self.quat_to_yaw_list(rot) 
+
+            yaw = self.quat_to_yaw_list(rot)
             x, y = trans[0], trans[1]
 
             self.l_trans, self.l_R = get_transform(np.array([x, y, yaw]).reshape(3, 1))
 
-        rospy.Subscriber('/move_base_simple_goal', PoseStamped, self.rviz_goal_callback)
+        rospy.Subscriber("/move_base_simple_goal", PoseStamped, self.rviz_goal_callback)
 
         if self.reference_path_mode == 1:
-            rospy.Subscriber('/reference_path', Path, self.path_callback)
+            rospy.Subscriber("/reference_path", Path, self.path_callback)
 
         elif self.reference_path_mode == 2:
             # read from csv file
             pass
-            
+
         self.listener = tf.TransformListener()
 
         # rospy.Subscriber('/coarse_path', Path, self.path_callback)
-        
 
     def control(self):
 
@@ -170,15 +169,19 @@ class rda_core:
             if self.robot_state is None:
                 rospy.loginfo_throttle(1, "waiting for robot states")
                 continue
-            
+
             if not self.ref_path_list:
 
                 if self.reference_path_mode == 0:
-                    rospy.loginfo_throttle(1, "waiting for reference path, waypoints are not set")
+                    rospy.loginfo_throttle(
+                        1, "waiting for reference path, waypoints are not set"
+                    )
                     continue
-                
+
                 elif self.reference_path_mode == 1:
-                    rospy.loginfo_throttle(1, "waiting for reference path, no topic '' ")
+                    rospy.loginfo_throttle(
+                        1, "waiting for reference path, no topic '' "
+                    )
                     continue
 
             else:
@@ -218,19 +221,28 @@ class rda_core:
 
             rate.sleep()
 
-
     def read_robot_state(self):
 
         try:
-            (trans,rot) = self.listener.lookupTransform(self.target_frame, self.base_frame, rospy.Time(0))
+            (trans, rot) = self.listener.lookupTransform(
+                self.target_frame, self.base_frame, rospy.Time(0)
+            )
             # print(trans, rot)
-            yaw = self.quat_to_yaw_list(rot) 
+            yaw = self.quat_to_yaw_list(rot)
             x, y = trans[0], trans[1]
             self.robot_state = np.array([x, y, yaw]).reshape(3, 1)
 
-        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-            rospy.loginfo_throttle(1, 'waiting for tf for the transform from {} to {}'.format(self.base_frame, self.target_frame)) 
-
+        except (
+            tf.LookupException,
+            tf.ConnectivityException,
+            tf.ExtrapolationException,
+        ):
+            rospy.loginfo_throttle(
+                1,
+                "waiting for tf for the transform from {} to {}".format(
+                    self.base_frame, self.target_frame
+                ),
+            )
 
     def obstacle_callback(self, obstacle_array):
 
@@ -282,29 +294,27 @@ class rda_core:
 
         self.obstacle_list[:] = temp_obs_list[:]
 
-
-
     def rviz_goal_callback(self, goal):
 
         # generate reference line by rviz goal
-        
+
         goal_x = goal.pose.position.x
         goal_y = goal.pose.position.y
         theta = rda_core.quat_to_yaw(goal.pose.orientation)
 
         self.goal = np.array([[goal_x], [goal_y], [theta]])
 
-        self.waypoints =  [self.robot_state, self.goal]
+        self.waypoints = [self.robot_state, self.goal]
 
-        self.ref_path_list = self.cg.generate_curve('line', self.waypoints, 0.1, 0, include_gear=False)
+        self.ref_path_list = self.cg.generate_curve(
+            "line", self.waypoints, 0.1, 0, include_gear=False
+        )
 
         self.rda_opt.update_ref_path(self.ref_path_list)
 
-
-
     def path_callback(self, path):
 
-        self.way_points =  []
+        self.way_points = []
 
         for p in path.poses:
             x = p.pose.position.x
@@ -399,7 +409,7 @@ class rda_core:
             marker.color.g = 0.0
             marker.color.b = 1.0
 
-            marker.lifetime = rospy.Duration(0.1) 
+            marker.lifetime = rospy.Duration(0.1)
 
             # breakpoint()
 

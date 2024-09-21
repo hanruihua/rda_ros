@@ -13,32 +13,25 @@ Please install the RDA planner first.
 ## Test Environment 
 - Ubuntu 20.04
 
-
 ## Installation
 
 ```
-
-
+mkdir -p ~/catkin_ws/src
+cd ~/catkin_ws/src
+git clone https://github.com/hanruihua/rda_ros
+cd ~/catkin_ws && catkin_make
 ```
-
 
 ## Node API
 
 ### Published Topics
-
-
 
 ### Subscribed Topics
 
 
 ### Parameters
 
-
-
-
-
 ## Examples
-
 
 ### Gazebo
 
@@ -51,7 +44,7 @@ https://github.com/hanruihua/rda_ros/assets/16113200/68c584eb-8a4a-4618-b0cd-d76
 
 ## Citation
 
-If you find this code or paper helpful, please consider starring the repository and citing our work using the following BibTeX entries:
+If you find this code or paper helpful, please consider **starring** the repository and **citing** our work using the following BibTeX entries:
 
 ```
   @ARTICLE{10036019,
@@ -76,8 +69,9 @@ If you find this code or paper helpful, please consider starring the repository 
 }
 ```
 
-
 ## Contact
+
+If you have any issues about the paper and code:
 
 [Ruihua Han](https://github.com/hanruihua)
 

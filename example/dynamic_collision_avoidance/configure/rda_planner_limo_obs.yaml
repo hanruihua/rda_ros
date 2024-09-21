@@ -38,7 +38,7 @@ use_scan_obstacle: false
 # scan_eps: 0.2
 # scan_min_samples: 3
 
-# for reference path
+# initialize reference path
 waypoints: [[0, 0, 0], [5, 0, 0], [0, 0, 0]]
 loop: True
 curve_type: 'line'

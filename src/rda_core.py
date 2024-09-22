@@ -174,10 +174,10 @@ class rda_core:
                 rda_obs_markers = self.convert_to_markers(self.obstacle_list)
                 self.obs_pub.publish(rda_obs_markers)
 
-            if not self.ref_path_list:
+            if self.rda_opt.no_ref_path():
 
                 rospy.loginfo_throttle(
-                    1, "waiting for reference path, topic '/rda_ref_path' "
+                    1, "waiting for reference path, topic '/rda_sub_path' "
                 )
                 continue
 
@@ -297,6 +297,10 @@ class rda_core:
 
             points = np.array([x, y, theta]).reshape(3, 1)
             self.ref_path_list.append(points)
+        
+        if len(self.ref_path_list) == 0:
+            rospy.loginfo_throttle(1, "No waypoints are converted to reference path, waiting for new waypoints")
+            return
 
         rospy.loginfo_throttle(0.1, "target path update")
         self.rda_opt.update_ref_path(self.ref_path_list)

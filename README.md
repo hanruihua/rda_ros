@@ -17,20 +17,17 @@ Please install the following packages first.
 
 ## Installation
 
-- clone the repositories and build
+You can install the package by running the commands below:
 
 ```
 mkdir -p ~/rda_ws/src
 cd ~/rda_ws/src
 git clone https://github.com/hanruihua/rda_ros
 cd ~/rda_ws && catkin_make
+cd ~/rda_ws/src/rda_ros && sh setup.sh
+rosdep install rda_ros 
 ```
 
-- Install the dependencies
-
-```
-rosdep install rda_ros
-```
 
 ## Node API
 
@@ -137,15 +134,13 @@ rosdep install rda_ros
 
 ### Dynamic collision avoidance
 
-We provide the dynamic collision avoidance examples in Gazebo shown as follows. To run these examples, please see example/dynamic_collision_avoidance for detail.
-
-
+We provide the dynamic collision avoidance examples in Gazebo shown as follows. To run these examples, please see [example/dynamic_collision_avoidance](https://github.com/hanruihua/rda_ros/tree/main/example/dynamic_collision_avoidance) for detail.
 
 
 
 ### Autonomous Driving
 
-We provide the Autonomous Driving examples in Carla shown as follows. To run these examples, please see example/auto_driving for detail.
+We provide the Autonomous Driving examples in Carla shown as follows. To run these examples, please see [example/auto_driving](https://github.com/hanruihua/rda_ros/tree/main/example/dynamic_collision_avoidance) for detail.
 
 https://github.com/hanruihua/rda_ros/assets/16113200/68c584eb-8a4a-4618-b0cd-d76c0ef37a1e
 

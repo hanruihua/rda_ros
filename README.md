@@ -10,16 +10,26 @@ Please install the following packages first.
 - ROS Noetic
 - [RDA_planner](https://github.com/hanruihua/RDA_planner)
 
+*Note: we recommend to use python 3.8 and conda to manage the python environments because of some examples are based on Carla.*
+
 ## Test Environment 
 - Ubuntu 20.04
 
 ## Installation
+
+- clone the repositories and build
 
 ```
 mkdir -p ~/rda_ws/src
 cd ~/rda_ws/src
 git clone https://github.com/hanruihua/rda_ros
 cd ~/rda_ws && catkin_make
+```
+
+- Install the dependencies
+
+```
+rosdep install rda_ros
 ```
 
 ## Node API
@@ -125,16 +135,17 @@ cd ~/rda_ws && catkin_make
 
 ## Examples
 
-### Gazebo
+### Dynamic collision avoidance
+
+We provide the dynamic collision avoidance examples in Gazebo shown as follows. To run these examples, please see example/dynamic_collision_avoidance for detail.
 
 
 
 
 
+### Autonomous Driving
 
-
-### CARLA
-
+We provide the Autonomous Driving examples in Carla shown as follows. To run these examples, please see example/auto_driving for detail.
 
 https://github.com/hanruihua/rda_ros/assets/16113200/68c584eb-8a4a-4618-b0cd-d76c0ef37a1e
 

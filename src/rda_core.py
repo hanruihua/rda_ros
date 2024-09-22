@@ -12,7 +12,7 @@ from gctl.curve_generator import curve_generator
 from sklearn.cluster import DBSCAN
 from sensor_msgs.msg import LaserScan
 import cv2
-from irsim.util.util import get_transform
+from math import cos, sin
 
 robot_tuple = namedtuple(
     "robot_tuple", "G h cone_type wheelbase max_speed max_acce dynamics"
@@ -146,7 +146,7 @@ class rda_core:
             yaw = self.quat_to_yaw_list(rot)
             x, y = trans[0], trans[1]
 
-            self.l_trans, self.l_R = get_transform(np.array([x, y, yaw]).reshape(3, 1))
+            self.l_trans, self.l_R = self.get_transform(np.array([x, y, yaw]).reshape(3, 1))
 
 
         rospy.Subscriber("/rda_sub_path", Path, self.path_callback)
@@ -337,7 +337,7 @@ class rda_core:
                     vertices = box.T
 
                     temp_vertices = self.l_R @ vertices + self.l_trans
-                    r_trans, r_R = get_transform(self.robot_state)
+                    r_trans, r_R = self.get_transform(self.robot_state)
                     global_vertices = r_trans + r_R @ temp_vertices
 
                     self.obstacle_list.append(
@@ -539,3 +539,28 @@ class rda_core:
             h[i, 0] = c
 
         return G, h
+
+    def get_transform(self, state):
+
+        """
+        Get rotation and translation matrices from state.
+
+        Args:
+            state (np.array): State [x, y, theta] (3x1) or [x, y] (2x1).
+
+        Returns:
+            tuple: Translation vector and rotation matrix.
+        """
+        
+        if state.shape == (2, 1):
+            rot = np.array([[1, 0], [0, 1]])
+            trans = state[0:2]
+        else:
+            rot = np.array(
+                [
+                    [cos(state[2, 0]), -sin(state[2, 0])],
+                    [sin(state[2, 0]), cos(state[2, 0])],
+                ]
+            )
+            trans = state[0:2]
+        return trans, rot

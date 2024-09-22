@@ -22,6 +22,12 @@ cd $CARLA_ROOT && ./CarlaUE4.sh
 roslaunch rda_ros run_carla_Town04.launch
 ```
 
+- Generate the traffic
+
+```
+roslaunch rda_ros generate_traffic.launch
+```
+
 - Run the RDA planner
 
 ```

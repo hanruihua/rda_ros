@@ -4,6 +4,7 @@
     <node name='rda_control' pkg="rda_ros" type="rda_node.py" output="screen">
         <remap from="/rda_cmd_vel" to="/cmd_vel"/>
         <remap from="/scan" to="/limo/scan"/>
+        <remap from="/rda_goal" to="/move_base_simple/goal"/>
         <rosparam command="load" file="$(arg rda_configure_file)" />
     </node>
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Step 1: Launch the Gazebo environment
-gnome-terminal -- bash -c "roslaunch rda_ros gazebo_limo_env20.launch"
+gnome-terminal -- bash -c "roslaunch rda_ros gazebo_limo_env10.launch"
 
 # Give some time for Gazebo to start
 sleep 15

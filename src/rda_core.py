@@ -151,6 +151,7 @@ class rda_core:
             self.l_trans, self.l_R = self.get_transform(np.array([x, y, yaw]).reshape(3, 1))
 
 
+        rospy.Subscriber('/rda_goal', PoseStamped, self.goal_callback)
         rospy.Subscriber("/rda_sub_path", Path, self.path_callback)
         self.listener = tf.TransformListener()
 
@@ -302,8 +303,29 @@ class rda_core:
             rospy.loginfo_throttle(1, "No waypoints are converted to reference path, waiting for new waypoints")
             return
 
-        rospy.loginfo_throttle(0.1, "target path update")
+        rospy.loginfo_throttle(0.1, "reference path update")
         self.rda_opt.update_ref_path(self.ref_path_list)
+
+
+    def goal_callback(self, goal):
+        
+        x = goal.pose.position.x
+        y = goal.pose.position.y
+        theta = self.quat_to_yaw(goal.pose.orientation)
+
+        self.goal = np.array([[x], [y], [theta]])
+
+        print(f'set rda goal: {self.goal}')
+
+        self.ref_path_list = self.cg.generate_curve(self.curve_type, [self.robot_state, self.goal], self.step_size, self.min_radius)
+
+        if len(self.ref_path_list) == 0:
+            rospy.loginfo_throttle(1, "No waypoints are converted to reference path, waiting for new waypoints")
+            return
+
+        rospy.loginfo_throttle(0.1, "reference path update")
+        self.rda_opt.update_ref_path(self.ref_path_list)
+
 
     def scan_callback(self, scan_data):
 

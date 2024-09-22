@@ -1,9 +1,9 @@
 # parameters of rvo ros
 neighborDist: 5
-maxNeighbors: 13
+maxNeighbors: 10
 timeHorizon: 10
 timeHorizonObst: 5
 radius: 0.2
-maxSpeed: 0.10
+maxSpeed: 0.07
 goal_threshold: 0.001
 agent_name: 'agent'

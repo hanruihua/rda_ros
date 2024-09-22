@@ -17,13 +17,13 @@ accelerated: True
 time_print: False
 obstacle_order: True
 max_edge_num: 4
-max_obs_num: 6
+max_obs_num: 4
 goal_index_threshold: 1
 
 # Tune parameters
 iter_threshold: 0.2
 slack_gain: 10
-max_sd: 0.2
+max_sd: 0.3
 min_sd: 0.01
 ws: 0.3
 wu: 10.0

@@ -11,6 +11,7 @@
     <node name='rda_control' pkg="rda_ros" type="rda_node.py">
         <rosparam command="load" file="$(arg rda_configure_file)" />
         <remap from="/rda_cmd_vel" to="/cmd_vel"/>
+        <remap from="/rda_goal" to="/move_base_simple/goal"/>
     </node>
 
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find rda_ros)/example/dynamic_collision_avoidance/rviz/rda_gazebo_limo_obs.rviz" />

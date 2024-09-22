@@ -1,7 +1,7 @@
 <launch>
 
     <arg name="robot_namespace" default="/"/>
-    <arg name="world_name" default="$(find rda_ros)/example/dynamic_collision_avoidance/world/gazebo_world_20.world"/>
+    <arg name="world_name" default="$(find rda_ros)/example/dynamic_collision_avoidance/world/gazebo_world_10.world"/>
     
      <!-- initial pose -->
     <arg name="x" default="0.0"/>
@@ -9,7 +9,7 @@
     <arg name="z" default="0.0"/>
     <arg name="yaw" default="0.0"/>
 
-    <rosparam command="load" file = "$(find rda_ros)/example/dynamic_collision_avoidance/configure/rvo_config_20.yaml"/>
+    <rosparam command="load" file = "$(find rda_ros)/example/dynamic_collision_avoidance/configure/rvo_config_10.yaml"/>
 
     <node name="rvo_node" pkg="rvo_ros" type="rvo_node">
         <remap from="/rvo/model_states" to="/gazebo/model_states"/>

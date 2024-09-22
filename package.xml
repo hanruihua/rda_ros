@@ -63,6 +63,7 @@
   <exec_depend>message_runtime</exec_depend>
   
   <depend>costmap_converter</depend>
+  <depend>carla_msgs</depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

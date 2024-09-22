@@ -55,7 +55,7 @@ roslaunch rda_ros rda_gazebo_limo_obs.launch
 roslaunch rda_ros rda_gazebo_limo_scan.launch
 ```
 
-you can change the goal by clicking rviz 2D nav goal.
+**Note:** you can change the goal by clicking rviz 2D nav goal.
 
 
 

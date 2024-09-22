@@ -9,7 +9,11 @@ else
   echo "rvo_ros already cloned."
 fi
 
-echo "export GAZEBO_PLUGIN_PATH=${GAZEBO_PLUGIN_PATH}:~/rda_ws/devel/lib " >> ~/.bashrc
+if [ -n "$($SHELL -c 'echo $ZSH_VERSION')" ]; then
+  echo "export GAZEBO_PLUGIN_PATH=${GAZEBO_PLUGIN_PATH}:~/rda_ws/devel/lib " >> ~/.zshrc
+elif [ -n "$($SHELL -c 'echo $BASH_VERSION')" ]; then
+  echo "export GAZEBO_PLUGIN_PATH=${GAZEBO_PLUGIN_PATH}:~/rda_ws/devel/lib " >> ~/.bashrc
+fi
 
 # Clone limo_ros repository
 if [ ! -d "limo_ros" ]; then
@@ -21,6 +25,7 @@ fi
 # Build the workspace
 cd ~/rda_ws
 catkin_make
+
 
 echo "Setup completed successfully."
 

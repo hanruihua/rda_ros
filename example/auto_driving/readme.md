@@ -5,8 +5,21 @@
 
 - [Carla 0.9.13](https://github.com/carla-simulator/carla/releases) simulator and setup the $CARLA_ROOT in your .basrhrc or .zshrc
 
-- [Carla ROS bridge](https://github.com/hanruihua/ros-bridge)
+- [Carla ROS bridge](https://github.com/carla-simulator/ros-bridge), Please set PYTHONPATH depend on your Carla ROS bridge document.
 
+
+You can install the Carla ROS bridge manually or by the following command:
+
+```
+sh carla_example_setup.sh
+```
+
+Please make sure you have set the $CARLA_ROOT and PYTHONPATH successfully. Following is the example of setting the $CARLA_ROOT and PYTHONPATH in your .bashrc or .zshrc:
+
+``` 
+export CARLA_ROOT = PATH TO YOUR CARLA ROOT
+export PYTHONPATH="${CARLA_ROOT}/PythonAPI/carla/":"${CARLA_ROOT}/PythonAPI/carla/dist/carla-0.9.13-py3.7-linux-x86_64.egg":${PYTHONPATH}
+```
 
 ## Run examples
 

@@ -24,7 +24,7 @@ mkdir -p ~/rda_ws/src
 cd ~/rda_ws/src
 git clone https://github.com/hanruihua/rda_ros
 cd ~/rda_ws && catkin_make
-cd ~/rda_ws/src/rda_ros && sh setup.sh
+cd ~/rda_ws/src/rda_ros && sh source_setup.sh
 rosdep install rda_ros 
 ```
 

@@ -288,6 +288,8 @@ class rda_core:
 
     def path_callback(self, path):
 
+        self.ref_path_list = []
+
         for p in path.poses:
             x = p.pose.position.x
             y = p.pose.position.y

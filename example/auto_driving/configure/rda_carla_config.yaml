@@ -25,7 +25,7 @@ slack_gain: 10
 max_sd: 1.0
 min_sd: 0.1
 ws: 0.2
-wu: 1.0
+wu: 1.4
 ro1: 200
 ro2: 1.0
 

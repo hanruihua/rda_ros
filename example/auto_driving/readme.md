@@ -21,12 +21,11 @@ export CARLA_ROOT = PATH TO YOUR CARLA ROOT
 export PYTHONPATH="${CARLA_ROOT}/PythonAPI/carla/":"${CARLA_ROOT}/PythonAPI/carla/dist/carla-0.9.13-py3.7-linux-x86_64.egg":${PYTHONPATH}
 ```
 
-- There may be some python package need to be installed, you can install them by the following command:
+- Install python packages by the following command:
 
 ```
 pip install transforms3d pygame
 ```
-
 
 ## Run examples
 
@@ -64,7 +63,7 @@ roslaunch rda_ros generate_traffic.launch
 roslaunch rda_ros rda_carla.launch
 ```
 
-**Note**: You can change the reference path by clicking rviz 2D nav goal.  
+**Note**: You can change the reference path by clicking 2D nav goal in rviz.  
 
 
 

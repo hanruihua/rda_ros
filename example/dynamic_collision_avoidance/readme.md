@@ -38,7 +38,7 @@ You can also run this example by the following command step-by-step:
 ### Step 1. launch the gazebo environment
 
 ```
-roslaunch rda_ros gazebo_limo_env20.launch
+roslaunch rda_ros gazebo_limo_env10.launch
 ```
 
 ### Step 2. launch the rda control

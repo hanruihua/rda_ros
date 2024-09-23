@@ -107,7 +107,9 @@ class rda_core:
         self.obstacle_list = []
         self.cg = curve_generator()
         self.listener = tf.TransformListener()
-        self.ref_path_list = self.generate_ref_path_list()   # generate the initial reference path
+        self.ref_path_list = (
+            self.generate_ref_path_list()
+        )  # generate the initial reference path
         robot_info_tuple = self.generate_robot_tuple(robot_info)
 
         self.rda_opt = MPC(
@@ -148,10 +150,11 @@ class rda_core:
             yaw = self.quat_to_yaw_list(rot)
             x, y = trans[0], trans[1]
 
-            self.l_trans, self.l_R = self.get_transform(np.array([x, y, yaw]).reshape(3, 1))
+            self.l_trans, self.l_R = self.get_transform(
+                np.array([x, y, yaw]).reshape(3, 1)
+            )
 
-
-        rospy.Subscriber('/rda_goal', PoseStamped, self.goal_callback)
+        rospy.Subscriber("/rda_goal", PoseStamped, self.goal_callback)
         rospy.Subscriber("/rda_sub_path", Path, self.path_callback)
         self.listener = tf.TransformListener()
 
@@ -168,7 +171,7 @@ class rda_core:
             if self.robot_state is None:
                 rospy.loginfo_throttle(1, "waiting for robot states")
                 continue
-            
+
             if len(self.obstacle_list) == 0:
                 rospy.loginfo_throttle(1, "No obstacles, perform path tracking")
             else:
@@ -186,7 +189,6 @@ class rda_core:
                 ref_path = self.convert_to_path(self.ref_path_list)
                 self.ref_path_pub.publish(ref_path)
 
-
             if self.max_obstacle_num == 0:
                 opt_vel, info = self.rda_opt.control(
                     self.robot_state, self.ref_speed, []
@@ -198,8 +200,19 @@ class rda_core:
 
             if info["arrive"]:
                 if self.loop:
-                    self.rda_opt.curve_index = 0
-                    self.rda_opt.cur_index = 0
+                    
+                    self.goal = self.rda_opt.ref_path[0]
+                    start = self.rda_opt.ref_path[-1]
+                    
+                    self.ref_path_list = self.cg.generate_curve(
+                                            self.curve_type,
+                                            [start, self.goal],
+                                            self.step_size,
+                                            self.min_radius,
+                                        )
+                    print("start new loop")
+                    self.rda_opt.update_ref_path(self.ref_path_list)
+
                 else:
                     opt_vel = np.zeros((2, 1))
                     print("arrive at the goal!")
@@ -256,11 +269,11 @@ class rda_core:
                 center = np.array([[vertex[0].x], [vertex[0].y]])
                 radius = obstacles.radius
 
-                linear, angular = (
+                linear_x, linear_y = (
                     obstacles.velocities.twist.linear.x,
-                    obstacles.velocities.twist.angular.z,
+                    obstacles.velocities.twist.linear.y,
                 )
-                velocity = np.array([[linear], [angular]])
+                velocity = np.array([[linear_x], [linear_y]])
 
                 circle_obs = rda_obs_tuple(center, radius, None, "norm2", velocity)
 
@@ -275,11 +288,11 @@ class rda_core:
                 vertex_list = [np.array([[p.x], [p.y]]) for p in vertex]
                 vertexes = np.hstack(vertex_list)
 
-                linear, angular = (
+                linear_x, linear_y = (
                     obstacles.velocities.twist.linear.x,
-                    obstacles.velocities.twist.angular.z,
+                    obstacles.velocities.twist.linear.y,
                 )
-                velocity = np.array([[linear], [angular]])
+                velocity = np.array([[linear_x], [linear_y]])
 
                 polygon_obs = rda_obs_tuple(None, None, vertexes, "Rpositive", velocity)
 
@@ -298,34 +311,43 @@ class rda_core:
 
             points = np.array([x, y, theta]).reshape(3, 1)
             self.ref_path_list.append(points)
-        
+
         if len(self.ref_path_list) == 0:
-            rospy.loginfo_throttle(1, "No waypoints are converted to reference path, waiting for new waypoints")
+            rospy.loginfo_throttle(
+                1,
+                "No waypoints are converted to reference path, waiting for new waypoints",
+            )
             return
 
         rospy.loginfo_throttle(0.1, "reference path update")
         self.rda_opt.update_ref_path(self.ref_path_list)
 
-
     def goal_callback(self, goal):
-        
+
         x = goal.pose.position.x
         y = goal.pose.position.y
         theta = self.quat_to_yaw(goal.pose.orientation)
 
         self.goal = np.array([[x], [y], [theta]])
 
-        print(f'set rda goal: {self.goal}')
+        print(f"set rda goal: {self.goal}")
 
-        self.ref_path_list = self.cg.generate_curve(self.curve_type, [self.robot_state, self.goal], self.step_size, self.min_radius)
+        self.ref_path_list = self.cg.generate_curve(
+            self.curve_type,
+            [self.robot_state, self.goal],
+            self.step_size,
+            self.min_radius,
+        )
 
         if len(self.ref_path_list) == 0:
-            rospy.loginfo_throttle(1, "No waypoints are converted to reference path, waiting for new waypoints")
+            rospy.loginfo_throttle(
+                1,
+                "No waypoints are converted to reference path, waiting for new waypoints",
+            )
             return
 
         rospy.loginfo_throttle(0.1, "reference path update")
         self.rda_opt.update_ref_path(self.ref_path_list)
-
 
     def scan_callback(self, scan_data):
 
@@ -427,7 +449,7 @@ class rda_core:
 
                 marker.id = obs_index
                 marker_array.markers.append(marker)
-        
+
             else:
                 marker.type = marker.CYLINDER
 
@@ -571,7 +593,6 @@ class rda_core:
         return G, h
 
     def get_transform(self, state):
-
         """
         Get rotation and translation matrices from state.
 
@@ -581,7 +602,7 @@ class rda_core:
         Returns:
             tuple: Translation vector and rotation matrix.
         """
-        
+
         if state.shape == (2, 1):
             rot = np.array([[1, 0], [0, 1]])
             trans = state[0:2]

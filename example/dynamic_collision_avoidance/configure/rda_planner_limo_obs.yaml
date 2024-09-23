@@ -8,7 +8,7 @@ robot_info:
   cone_type: Rpositive
 
 # for MPC parameters
-receding: 5
+receding: 7
 iter_num: 2
 enable_reverse: false
 sample_time: 0.3
@@ -17,16 +17,16 @@ accelerated: True
 time_print: False
 obstacle_order: True
 max_edge_num: 4
-max_obs_num: 4
+max_obs_num: 5
 goal_index_threshold: 1
 
 # Tune parameters
 iter_threshold: 0.2
-slack_gain: 10
-max_sd: 0.3
+slack_gain: 7
+max_sd: 0.2
 min_sd: 0.01
-ws: 0.3
-wu: 10.0
+ws: 0.2
+wu: 10
 ro1: 200
 ro2: 1.0
 
@@ -39,7 +39,7 @@ use_scan_obstacle: false
 # scan_min_samples: 3
 
 # initialize reference path
-waypoints: [[0, 0, 0], [5, 0, 0], [0, 0, 0]]
+waypoints: [[0, 0, 0], [5, 0, 0]]
 loop: True
 curve_type: 'line'
 step_size: 0.05

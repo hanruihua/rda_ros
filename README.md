@@ -10,7 +10,7 @@ Please install the following packages first.
 - ROS Noetic
 - [RDA_planner](https://github.com/hanruihua/RDA_planner)
 
-*Note: we recommend to use python 3.8 and conda to manage the python environments because of some examples are based on Carla.*
+*Note: We recommend using Python 3.8 and Conda to manage Python environments, as some examples are based on CARLA.*
 
 ## Test Environment 
 - Ubuntu 20.04

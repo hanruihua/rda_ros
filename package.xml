@@ -64,6 +64,8 @@
   
   <depend>costmap_converter</depend>
   <depend>carla_msgs</depend>
+  <depend>ackermann_msgs</depend>
+  <depend>derived_object_msgs</depend>
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

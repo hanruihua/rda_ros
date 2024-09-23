@@ -21,6 +21,13 @@ export CARLA_ROOT = PATH TO YOUR CARLA ROOT
 export PYTHONPATH="${CARLA_ROOT}/PythonAPI/carla/":"${CARLA_ROOT}/PythonAPI/carla/dist/carla-0.9.13-py3.7-linux-x86_64.egg":${PYTHONPATH}
 ```
 
+- There may be some python package need to be installed, you can install them by the following command:
+
+```
+pip install transforms3d pygame
+```
+
+
 ## Run examples
 
 We provide the shell script to run the example directly by running:

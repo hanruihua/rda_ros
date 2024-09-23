@@ -7,7 +7,7 @@ This is the ROS Wrapper of the [RDA planner](https://github.com/hanruihua/RDA-pl
 Please install the following packages first.
 
 - Python >= 3.8
-- ROS Noetic
+- [ROS Noetic](https://wiki.ros.org/noetic)
 - [RDA_planner](https://github.com/hanruihua/RDA_planner)
 
 *Note: We recommend using Python 3.8 and Conda to manage Python environments, as some examples are based on CARLA.*
@@ -27,7 +27,6 @@ cd ~/rda_ws && catkin_make
 cd ~/rda_ws/src/rda_ros 
 sh source_setup.sh && source ~/rda_ws/devel/setup.sh && rosdep install rda_ros 
 ```
-
 
 ## Node API
 

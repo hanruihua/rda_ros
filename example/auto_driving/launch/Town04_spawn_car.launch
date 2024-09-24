@@ -1,0 +1,63 @@
+<!-- -->
+<launch>
+  <!-- global parameter to set CARLA as time source -->
+  <param name="use_sim_time" value="True"/>
+  <arg name="auto_control" default="False" />
+
+  <!-- the network connection for the python connection to CARLA -->
+  <arg name='host' default='localhost'/>
+  <arg name='port' default='2000'/>
+  <arg name='timeout' default='200'/>
+  <arg name="passive" default='False'/>
+  <arg name='synchronous_mode' default='True'/>
+  <arg name='synchronous_mode_wait_for_vehicle_control_command' default='False'/>
+  <!-- set the fixed timestep length -->
+  <arg name='fixed_delta_seconds' default='0.1'/>
+  <arg name="spawn_point" default=""/>
+  <arg name='town' default='Town04'/>
+  <arg name='register_all_sensors' default='False'/>
+
+  <arg name='config_path' default='town04'/>
+
+  <arg name='ego_vehicle_role_name' default='["hero", "ego_vehicle", "agent_0", "agent_1", "agent_2", "agent_3", "agent_4", "agent_5", "agent_6", "agent_7", "agent_8", "agent_9",
+  "agent_10","agent_11","agent_12","agent_13","agent_14","agent_15","agent_16","agent_17","agent_18","agent_19","agent_20","agent_21","agent_22","agent_23","agent_24","agent_25","agent_26","agent_27","agent_28","agent_29"]'/>
+
+  <node pkg="carla_ros_bridge" name="carla_ros_bridge" type="bridge.py" output="screen" required="true">
+    <param name="host" value="$(arg host)" unless="$(eval host == '')"/>
+    <param name="port" value="$(arg port)" unless="$(eval port == '')"/>
+    <param name="timeout" value="$(arg timeout)" unless="$(eval timeout == '')"/>
+    <param name="passive" value="$(arg passive)"/>
+    <param name="synchronous_mode" value="$(arg synchronous_mode)"/>
+    <param name="synchronous_mode_wait_for_vehicle_control_command" value="$(arg synchronous_mode_wait_for_vehicle_control_command)"/>
+    <param name="fixed_delta_seconds" value="$(arg fixed_delta_seconds)"/>
+    <param name="register_all_sensors" value="$(arg register_all_sensors)"/>
+    <param name="town" value="$(arg town)"/>
+    <param name="ego_vehicle_role_name" value="$(arg ego_vehicle_role_name)"/>
+  </node>
+
+  <!-- <arg name="urdf_file" default="$(find rda_ros)/example/auto_driving/car_model/urdf/rover.urdf"/>
+  <param name="robot_description" textfile="$(arg urdf_file)"/>
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/>
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/> -->
+
+  <node pkg="rda_ros" type="carla_waypoint_publisher_rviz_goal.py" name="carla_waypoint_publisher" output="screen">
+    <param name="role_name" value="agent_0" />
+    <param name="host" value="$(arg host)" />
+    <param name="port" value="$(arg port)" />
+    <param name="timeout" value="$(arg timeout)" />
+  </node>
+
+  <node pkg="rda_ros" name="carla_map_visualization" type="carla_map_visualization.py" output="screen" required="true" />
+
+  <include file="$(find carla_spawn_objects)/launch/carla_spawn_objects.launch" >
+    <arg name="objects_definition_file" value='$(find rda_ros)/example/auto_driving/configure/$(arg config_path)/car.json'/>
+  </include>
+
+  <include file="$(find carla_manual_control)/launch/carla_manual_control.launch" unless="$(arg auto_control)">  
+    <arg name='role_name' value='agent_0'/>
+  </include>
+
+	<!--  **************** Visualisation ****************  -->
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find rda_ros)/example/auto_driving/configure/$(arg config_path)/rda_carla.rviz"/>
+
+</launch>

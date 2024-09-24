@@ -1,7 +1,0 @@
-<launch>
-
-    <node pkg="rda_ros" type="generate_traffic_topics.py" name="generate_traffic" output="screen">
-      <param name="objects_file" value="$(find rda_ros)/example/auto_driving/configure/traffic_objects.json" />
-    </node>
-
-</launch>

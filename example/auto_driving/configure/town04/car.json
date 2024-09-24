@@ -1,0 +1,73 @@
+{   
+    "objects": 
+    [
+        {
+            "type": "vehicle.tesla.model3",
+            "id": "agent_0",
+            "spawn_point": {"x": 130.0, "y": 170.0, "z": 10.0, "roll": 0.0, "pitch": 0.0, "yaw": 0.0},
+            "sensors":
+            [
+                {
+                    "type": "sensor.pseudo.tf",
+                    "id": "tf"
+                },
+                {
+                    "type": "sensor.pseudo.objects",
+                    "id": "objects"
+                },
+                {
+                    "type": "sensor.pseudo.odom",
+                    "id": "odometry"
+                },
+                {
+                    "type": "actor.pseudo.control",
+                    "id": "control"
+                },
+                {
+                    "type": "sensor.lidar.ray_cast_semantic",
+                    "id": "lidar",
+                    "spawn_point": {"x": 0.0, "y": 0.0, "z": 2.0, "roll": 0.0, "pitch": 0.0, "yaw": 0.0},
+                    "range": 100,
+                    "channels": 64,
+                    "points_per_second": 1280000,
+                    "upper_fov": 10.0,
+                    "lower_fov": -22.0,
+                    "rotation_frequency": 10
+                },
+                {
+                    "type": "sensor.camera.rgb",
+                    "id": "rgb_view",
+                    "spawn_point": {"x": 2.0, "y": 0.0, "z": 1.7, "roll": 0.0, "pitch": 0.0, "yaw": 0.0},
+                    "image_size_x": 800,
+                    "image_size_y": 600,
+                    "fov": 120.0,
+                    "attached_objects":
+                    [
+                        {
+                            "type": "actor.pseudo.control",
+                            "id": "control"
+                        }
+                    ]
+                },
+                {
+                    "type": "sensor.other.imu",
+                    "id": "imu",
+                    "spawn_point": {"x": 0.0, "y": 0.0, "z": 0.0, "roll": 0.0, "pitch": 0.0, "yaw": 0.0},
+                    "noise_accel_stddev_x": 0.0, "noise_accel_stddev_y": 0.0, "noise_accel_stddev_z": 0.0,
+                    "noise_gyro_stddev_x": 0.0, "noise_gyro_stddev_y": 0.0, "noise_gyro_stddev_z": 0.0,
+                    "noise_gyro_bias_x": 0.0, "noise_gyro_bias_y": 0.0, "noise_gyro_bias_z": 0.0
+                },
+                {
+                    "type": "sensor.other.radar",
+                    "id": "radar",
+                    "spawn_point": {"x": 2.0, "y": 0.0, "z": 1.0, "roll": 0.0, "pitch": 0.0, "yaw": 0.0},
+                    "horizontal_fov": 90,
+                    "vertical_fov": 30,
+                    "points_per_second": 3000,
+                    "range": 100,
+                    "sensor_tick": 0.0
+                }
+            ]
+        }
+    ]
+}

@@ -11,7 +11,7 @@
 You can install the Carla ROS bridge manually or by the following command:
 
 ```
-sh carla_example_setup.sh
+sh setup_carla_example.sh
 ```
 
 Please make sure you have set the $CARLA_ROOT and PYTHONPATH successfully. Following is the example of setting the $CARLA_ROOT and PYTHONPATH in your .bashrc or .zshrc:
@@ -29,15 +29,21 @@ pip install transforms3d pygame
 
 ## Run examples
 
-We provide the shell script to run the example directly by running:
+We provide the shell script to run the examples directly by running:
 
 ```
-sh run_carla_example.sh
+sh run_carla_example_Town02.sh
+```
+
+and 
+
+```
+sh run_carla_example_Town04.sh
 ```
 
 or 
 
-You can also run this example by the following command step-by-step:
+You can also run Town04 example by the following command step-by-step:
 
 ### Step 1. start the Carla simulator
 
@@ -48,20 +54,22 @@ cd $CARLA_ROOT && ./CarlaUE4.sh
 ### Step 2. run the Carla ROS bridge to configure the environment
 
 ```
-roslaunch rda_ros run_carla_Town04.launch
+roslaunch rda_ros Town04_spawn_car.launch
 ```
 
 ### Step 3. Generate the traffic vehicles
 
 ```
-roslaunch rda_ros generate_traffic.launch
+roslaunch rda_ros Town04_generate_traffic.launch
 ```
 
 ### Step 4. Run rda_ros control
 
 ```
-roslaunch rda_ros rda_carla.launch
+roslaunch rda_ros Town04_rda_carla.launch
 ```
+
+For Town02 example, simply replace the Town04 with Town02 in the above commands.
 
 **Note**: You can change the reference path by clicking 2D nav goal in rviz.  
 

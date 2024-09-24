@@ -1,0 +1,9 @@
+<launch>
+
+    <arg name='config_path' default='town04'/>
+
+    <node pkg="rda_ros" type="generate_traffic_topics_topology.py" name="generate_traffic" output="screen">
+      <param name="objects_file" value="$(find rda_ros)/example/auto_driving/configure/$(arg config_path)/traffic_objects.json" />
+    </node>
+
+</launch>

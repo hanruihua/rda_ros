@@ -1,0 +1,16 @@
+<launch>
+
+    <arg name='config_path' default='town04'/>
+
+    <node pkg="carla_twist_to_control" type="carla_twist_to_control.py" name="carla_twist_to_control">
+      <param name="role_name" value="agent_0"/>
+    </node>
+
+    <node pkg="rda_ros" type="rda_node.py" name="rda_node" output="screen">
+      <rosparam file="$(find rda_ros)/example/auto_driving/configure/$(arg config_path)/rda_carla_config.yaml" command="load" />
+      <remap from="rda_cmd_vel" to="/carla/agent_0/twist"/>
+      <remap from="rda_sub_path" to="/carla/agent_0/waypoints"/>
+
+    </node>
+
+</launch>

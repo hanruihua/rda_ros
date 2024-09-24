@@ -1,0 +1,50 @@
+{
+    "obstacles": [
+        {
+            "location": {
+                "x": -7.5,
+                "y": 230.9,
+                "z": 1
+            },
+            "rotation": {
+                "yaw": -90
+            },
+            "autopilot": false
+        },
+        {
+            "location": {
+                "x": -7.5,
+                "y": 260.9,
+                "z": 1
+            },
+            "rotation": {
+                "yaw": -90
+            },
+            "autopilot": false
+        },
+        {
+            "location": {
+                "x": 45.9,
+                "y": 259.9,
+                "z": 1
+            },
+            "rotation": {
+                "yaw": -90
+            },
+            "autopilot": false
+        },
+        {
+            "location": {
+                "x": 163.3,
+                "y": 190.0,
+                "z": 1
+            },
+            "rotation": {
+                "yaw": -90
+            },
+            "autopilot": false
+        }
+    ],
+    "roads": [
+    ]
+}

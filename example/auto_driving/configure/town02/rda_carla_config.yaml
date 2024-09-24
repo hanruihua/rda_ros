@@ -1,0 +1,56 @@
+robot_info: 
+  max_speed: [8, 0.5]
+  max_acce: [1, 0.05]
+  length: 4.69
+  width: 1.85
+  wheelbase: 2.87
+  dynamics: acker
+  cone_type: Rpositive
+
+receding: 5
+iter_num: 2
+enable_reverse: false
+sample_time: 0.3
+process_num: 4
+accelerated: True
+time_print: False
+obstacle_order: True
+max_edge_num: 4
+max_obs_num: 4
+goal_index_threshold: 1
+
+# Tune parameters
+iter_threshold: 0.2
+slack_gain: 10
+max_sd: 0.5
+min_sd: 0.1
+ws: 0.2
+wu: 0.6
+ro1: 200
+ro2: 1.0
+
+# reference speed
+ref_speed: 4.0
+
+# do not use scan
+use_scan_obstacle: false
+# scan_eps: 0.2
+# scan_min_samples: 3
+
+# for reference path, wait for the /rda_ref_path topic
+
+
+# for marker visualization
+marker_x: 0.2
+marker_lifetime: 1.0
+
+# for frame
+target_frame: map
+base_frame: agent_0
+
+
+
+
+
+
+

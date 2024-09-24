@@ -134,7 +134,7 @@ sh source_setup.sh && source ~/rda_ws/devel/setup.sh && rosdep install rda_ros
 
 ### Dynamic collision avoidance
 
-We provide the dynamic collision avoidance examples in Gazebo shown as follows. To run these exampreference path that the RDA planner should follow. les, please see [example/dynamic_collision_avoidance](https://github.com/hanruihua/rda_ros/tree/main/example/dynamic_collision_avoidance) for detail.
+We provide the dynamic collision avoidance examples in Gazebo shown as follows. To run these examples, please see [example/dynamic_collision_avoidance](https://github.com/hanruihua/rda_ros/tree/main/example/dynamic_collision_avoidance) for detail.
 
 
 

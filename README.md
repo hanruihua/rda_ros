@@ -177,6 +177,7 @@ If you find this code or paper helpful, please consider **starring** the reposit
 - RDA Planner is an optimization-based planner. Better performance can be achieved with a more powerful computer, especially when running with the CARLA and Gazebo simulators.
 - If your computer doesn't match the demo's performance, try adjusting the parameters in the RDA MPC configuration to reduce computation costs.
 - Since obstacles in some scenarios are moving and set randomly, there may be cases where the robot cannot avoid them. Adjust the parameters in the RDA MPC configuration can improve the performance.
+- This node has many parameters. We recommend using YAML files to store them and load them in the launch file, as shown in the examples. This approach simplifies adjusting parameters for different scenarios.
 
 ## Contact
 

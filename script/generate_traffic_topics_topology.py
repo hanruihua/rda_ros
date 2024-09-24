@@ -13,6 +13,7 @@ def lateral_shift(transform, shift):
     transform.rotation.yaw += 90
     return transform.location + shift * transform.get_forward_vector()
 
+
 def add_topology():
     """Add polygons for topology"""
     map = world.get_map()
@@ -44,11 +45,11 @@ def add_topology():
                 if n == 1:
                     vertex1 = lateral_shift(wp.transform, wp.lane_width * 1.0)
                     points_list.append(Point32(x=vertex1.x, y=-vertex1.y))
-                
+
                     vertex2 = lateral_shift(wp.transform, wp.lane_width * 2.0)
                     points_list.append(Point32(x=vertex2.x, y=-vertex2.y))
 
-                if n == len(waypoints)-1:
+                if n == len(waypoints) - 1:
                     vertex4 = lateral_shift(wp.transform, wp.lane_width * 2.0)
                     points_list.append(Point32(x=vertex4.x, y=-vertex4.y))
 
@@ -59,16 +60,17 @@ def add_topology():
                 if way_yaw >= 2 and way_yaw <= 88:
                     straight_road = 0
                     break
-            
+
             if straight_road == 1:
                 obstacle = ObstacleMsg()
                 obstacle.polygon = Polygon(points=points_list)
                 rda_obstacles.obstacles.append(obstacle)
 
 
-
 if __name__ == "__main__":
     rospy.init_node("generate_traffic_node")
+
+    topology = rospy.get_param('~topology', False)
 
     client = carla.Client("localhost", 2000)
     client.set_timeout(10.0)
@@ -87,7 +89,7 @@ if __name__ == "__main__":
             objects = json.load(file)
             obstacles = objects["obstacles"]
             roads = objects["roads"]
-            topology = objects["topology"]
+            # topology = objects["topology"]
 
         for obs in obstacles:
             location = carla.Location(
@@ -106,10 +108,11 @@ if __name__ == "__main__":
 
         rate = rospy.Rate(50)
 
+        rda_obstacles = ObstacleArrayMsg()
+
         while not rospy.is_shutdown():
             world.wait_for_tick()
 
-            rda_obstacles = ObstacleArrayMsg()
             rda_obstacles.header = Header(stamp=rospy.Time.now(), frame_id="map")
             rda_obstacles.obstacles = []
 

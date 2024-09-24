@@ -16,7 +16,7 @@ accelerated: True
 time_print: False
 obstacle_order: True
 max_edge_num: 4
-max_obs_num: 11
+max_obs_num: 5
 goal_index_threshold: 4
 
 # Tune parameters

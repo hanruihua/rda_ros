@@ -138,11 +138,12 @@ We provide the dynamic collision avoidance examples in Gazebo shown as follows. 
 
 - Dynamic collision avoidance with obstacles information input
 
-https://github.com/user-attachments/assets/da800c6f-e889-4a50-9ade-a35ee01cc236
+https://github.com/user-attachments/assets/1e0184b0-3a3f-499d-a577-10f8d1d28b0b
 
 - Dynamic collision avoidance with scan information input
 
-https://github.com/user-attachments/assets/9683ede3-6dca-4d0f-91cf-3f127a31e241
+https://github.com/user-attachments/assets/60781585-b627-43f3-86b4-7c68e6f66909
+
 
 ### Autonomous Driving
 
@@ -154,7 +155,7 @@ https://github.com/user-attachments/assets/da8a102e-1d51-4cbd-a52c-544ba6a42ff2
 
 - Autonomous Driving in Town04 with chaos traffic
 
-https://github.com/user-attachments/assets/49cbe1cc-7e22-44b8-adb0-aa56f30714e6
+https://github.com/user-attachments/assets/b0961e1b-3c41-4b42-886e-668455612bb9
 
 ## Citation
 

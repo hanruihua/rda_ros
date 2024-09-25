@@ -13,6 +13,7 @@ Please install the following packages first.
 *Note: We recommend using Python 3.8 and Conda to manage Python environments, as some examples are based on CARLA.*
 
 ## Test Environment 
+
 - Ubuntu 20.04
 
 ## Installation
@@ -27,6 +28,34 @@ cd ~/rda_ws && catkin_make
 cd ~/rda_ws/src/rda_ros 
 sh source_setup.sh && source ~/rda_ws/devel/setup.sh && rosdep install rda_ros 
 ```
+
+
+## Demonstration
+
+### Dynamic collision avoidance
+
+We provide the dynamic collision avoidance examples in Gazebo shown as follows. To run these examples, please see [example/dynamic_collision_avoidance](https://github.com/hanruihua/rda_ros/tree/main/example/dynamic_collision_avoidance) for detail.
+
+- Dynamic collision avoidance with obstacles information input
+
+https://github.com/user-attachments/assets/1e0184b0-3a3f-499d-a577-10f8d1d28b0b
+
+- Dynamic collision avoidance with scan information input
+
+https://github.com/user-attachments/assets/60781585-b627-43f3-86b4-7c68e6f66909
+
+
+### Autonomous Driving
+
+We provide the Autonomous Driving examples in Carla shown as follows. To run these examples, please see [example/auto_driving](https://github.com/hanruihua/rda_ros/tree/main/example/auto_driving) for detail.
+
+- Autonomous Driving in Town02 with Topology Map and regular traffic vehicles
+
+https://github.com/user-attachments/assets/da8a102e-1d51-4cbd-a52c-544ba6a42ff2
+
+- Autonomous Driving in Town04 with chaos traffic
+
+https://github.com/user-attachments/assets/b0961e1b-3c41-4b42-886e-668455612bb9
 
 ## Node API
 
@@ -129,33 +158,6 @@ sh source_setup.sh && source ~/rda_ws/devel/setup.sh && rosdep install rda_ros
 | `~marker_x`        | `float` | `0.05`        | Scale factor for marker size in visualization. |
 | `~marker_lifetime` | `float` | `0.1`         | Lifetime of markers in RViz (in seconds).      |
 
-
-## Demonstration
-
-### Dynamic collision avoidance
-
-We provide the dynamic collision avoidance examples in Gazebo shown as follows. To run these examples, please see [example/dynamic_collision_avoidance](https://github.com/hanruihua/rda_ros/tree/main/example/dynamic_collision_avoidance) for detail.
-
-- Dynamic collision avoidance with obstacles information input
-
-https://github.com/user-attachments/assets/1e0184b0-3a3f-499d-a577-10f8d1d28b0b
-
-- Dynamic collision avoidance with scan information input
-
-https://github.com/user-attachments/assets/60781585-b627-43f3-86b4-7c68e6f66909
-
-
-### Autonomous Driving
-
-We provide the Autonomous Driving examples in Carla shown as follows. To run these examples, please see [example/auto_driving](https://github.com/hanruihua/rda_ros/tree/main/example/auto_driving) for detail.
-
-- Autonomous Driving in Town02 with Topology Map and regular traffic vehicles
-
-https://github.com/user-attachments/assets/da8a102e-1d51-4cbd-a52c-544ba6a42ff2
-
-- Autonomous Driving in Town04 with chaos traffic
-
-https://github.com/user-attachments/assets/b0961e1b-3c41-4b42-886e-668455612bb9
 
 ## Citation
 

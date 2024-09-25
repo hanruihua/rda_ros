@@ -138,12 +138,11 @@ We provide the dynamic collision avoidance examples in Gazebo shown as follows. 
 
 - Dynamic collision avoidance with obstacles information input
 
-
-
-
+https://github.com/user-attachments/assets/e6d9c6eb-c16c-46e7-97e8-d75231ad0652
 
 - Dynamic collision avoidance with scan information input
 
+https://github.com/user-attachments/assets/88c45079-6547-4bad-ab55-e619f9d6ccb1
 
 ### Autonomous Driving
 
@@ -151,19 +150,11 @@ We provide the Autonomous Driving examples in Carla shown as follows. To run the
 
 - Autonomous Driving in Town02 with Topology Map and regular traffic vehicles
 
-
-
-
-
-
-
+https://github.com/user-attachments/assets/9baaf074-e786-4a82-a625-357882641f02
 
 - Autonomous Driving in Town04 with chaos traffic
 
-
-
-
-
+https://github.com/user-attachments/assets/4eeb4415-1a01-4369-b46f-4a486b1319cb
 
 
 ## Citation

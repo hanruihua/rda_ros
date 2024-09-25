@@ -2,9 +2,9 @@
 
 import numpy as np
 import rospy
-from geometry_msgs.msg import Twist, PoseStamped, PoseWithCovarianceStamped, Point
-from costmap_converter.msg import ObstacleArrayMsg, ObstacleMsg
-from nav_msgs.msg import Odometry, Path
+from geometry_msgs.msg import Twist, PoseStamped, Point
+from costmap_converter.msg import ObstacleArrayMsg
+from nav_msgs.msg import Path
 from visualization_msgs.msg import Marker, MarkerArray
 import tf
 from collections import namedtuple
@@ -137,28 +137,15 @@ class rda_core:
             ro2=ro2,
         )
 
+        rospy.Subscriber("/rda_goal", PoseStamped, self.goal_callback)
+        rospy.Subscriber("/rda_sub_path", Path, self.path_callback)
+        self.listener = tf.TransformListener()
+
         # Topic Subscribe
         if not use_scan_obstacle:
             rospy.Subscriber("/rda_obstacles", ObstacleArrayMsg, self.obstacle_callback)
         else:
             rospy.Subscriber("/scan", LaserScan, self.scan_callback)
-
-            trans, rot = self.listener.lookupTransform(
-                self.target_frame, self.lidar_frame, rospy.Time(0)
-            )
-
-            yaw = self.quat_to_yaw_list(rot)
-            x, y = trans[0], trans[1]
-
-            self.l_trans, self.l_R = self.get_transform(
-                np.array([x, y, yaw]).reshape(3, 1)
-            )
-
-        rospy.Subscriber("/rda_goal", PoseStamped, self.goal_callback)
-        rospy.Subscriber("/rda_sub_path", Path, self.path_callback)
-        self.listener = tf.TransformListener()
-
-        # rospy.Subscriber('/coarse_path', Path, self.path_callback)
 
     def control(self):
 
@@ -200,16 +187,16 @@ class rda_core:
 
             if info["arrive"]:
                 if self.loop:
-                    
+
                     self.goal = self.rda_opt.ref_path[0]
                     start = self.rda_opt.ref_path[-1]
-                    
+
                     self.ref_path_list = self.cg.generate_curve(
-                                            self.curve_type,
-                                            [start, self.goal],
-                                            self.step_size,
-                                            self.min_radius,
-                                        )
+                        self.curve_type,
+                        [start, self.goal],
+                        self.step_size,
+                        self.min_radius,
+                    )
                     print("start new loop")
                     self.rda_opt.update_ref_path(self.ref_path_list)
 
@@ -371,6 +358,32 @@ class rda_core:
             return
 
         else:
+
+            # get the transform from lidar to target frame
+            try:
+                trans, rot = self.listener.lookupTransform(
+                    self.target_frame, self.lidar_frame, rospy.Time(0)
+                )
+
+                yaw = self.quat_to_yaw_list(rot)
+                x, y = trans[0], trans[1]
+
+                l_trans, l_R = self.get_transform(np.array([x, y, yaw]).reshape(3, 1))
+
+            except (
+                tf.LookupException,
+                tf.ConnectivityException,
+                tf.ExtrapolationException,
+            ):
+                rospy.loginfo_throttle(
+                    1,
+                    "waiting for tf for the transform from {} to {}".format(
+                        self.lidar_frame, self.target_frame
+                    ),
+                )
+                return
+
+            # convert the points to convex polygon
             point_array = np.hstack(point_list).T
             labels = DBSCAN(
                 eps=self.scan_eps, min_samples=self.scan_min_samples
@@ -388,9 +401,7 @@ class rda_core:
 
                     vertices = box.T
 
-                    temp_vertices = self.l_R @ vertices + self.l_trans
-                    r_trans, r_R = self.get_transform(self.robot_state)
-                    global_vertices = r_trans + r_R @ temp_vertices
+                    global_vertices = l_R @ vertices + l_trans
 
                     self.obstacle_list.append(
                         rda_obs_tuple(None, None, global_vertices, "Rpositive", 0)

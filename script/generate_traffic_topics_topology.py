@@ -55,8 +55,8 @@ def add_topology():
             vertex3 = lateral_shift(wp.transform, wp.lane_width * 1.0)
             points_list.append(Point32(x=vertex3.x, y=-vertex3.y))
 
-            # check straight road  
-            for wp in waypoints:                   
+            # check straight road
+            for wp in waypoints:
                 way_yaw = numpy.mod(abs(wp.transform.rotation.yaw), 90)
                 if way_yaw >= 2 and way_yaw <= 88:
                     straight_road = 0
@@ -64,10 +64,15 @@ def add_topology():
 
             # check boundary road
             for wp in topology:
-                dist = numpy.array([wp.transform.location.x-vertex1.x, wp.transform.location.y-vertex1.y])
+                dist = numpy.array(
+                    [
+                        wp.transform.location.x - vertex1.x,
+                        wp.transform.location.y - vertex1.y,
+                    ]
+                )
                 if numpy.linalg.norm(dist, ord=2) <= wp.lane_width * 0.5:
                     boundary_road = 0
-            
+
             if straight_road == 1 and boundary_road == 1:
                 obstacle = ObstacleMsg()
                 obstacle.polygon = Polygon(points=points_list)
@@ -77,7 +82,7 @@ def add_topology():
 if __name__ == "__main__":
     rospy.init_node("generate_traffic_node")
 
-    topology = rospy.get_param('~topology', False)
+    topology = rospy.get_param("~topology", False)
 
     client = carla.Client("localhost", 2000)
     client.set_timeout(10.0)
@@ -94,8 +99,9 @@ if __name__ == "__main__":
 
         with open(rospy.get_param("~objects_file"), "r") as file:
             objects = json.load(file)
-            obstacles = objects["obstacles"]
-            roads = objects["roads"]
+            obstacles = objects.get("obstacles", [])
+            roads = objects.get("roads", [])
+
             # topology = objects["topology"]
 
         for obs in obstacles:

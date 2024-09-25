@@ -39,29 +39,36 @@ def add_topology():
     for waypoints in set_waypoints:
         waypoint = waypoints[0]
         straight_road = 1
+        boundary_road = 1
         points_list = []
         if not waypoint.is_junction:
-            for n, wp in enumerate(waypoints):
-                if n == 1:
-                    vertex1 = lateral_shift(wp.transform, wp.lane_width * 1.0)
-                    points_list.append(Point32(x=vertex1.x, y=-vertex1.y))
+            # form the polygon
+            wp = waypoints[0]
+            vertex1 = lateral_shift(wp.transform, wp.lane_width * 1.0)
+            points_list.append(Point32(x=vertex1.x, y=-vertex1.y))
+            vertex2 = lateral_shift(wp.transform, wp.lane_width * 2.0)
+            points_list.append(Point32(x=vertex2.x, y=-vertex2.y))
 
-                    vertex2 = lateral_shift(wp.transform, wp.lane_width * 2.0)
-                    points_list.append(Point32(x=vertex2.x, y=-vertex2.y))
+            wp = waypoints[-1]
+            vertex4 = lateral_shift(wp.transform, wp.lane_width * 2.0)
+            points_list.append(Point32(x=vertex4.x, y=-vertex4.y))
+            vertex3 = lateral_shift(wp.transform, wp.lane_width * 1.0)
+            points_list.append(Point32(x=vertex3.x, y=-vertex3.y))
 
-                if n == len(waypoints) - 1:
-                    vertex4 = lateral_shift(wp.transform, wp.lane_width * 2.0)
-                    points_list.append(Point32(x=vertex4.x, y=-vertex4.y))
-
-                    vertex3 = lateral_shift(wp.transform, wp.lane_width * 1.0)
-                    points_list.append(Point32(x=vertex3.x, y=-vertex3.y))
-
+            # check straight road  
+            for wp in waypoints:                   
                 way_yaw = numpy.mod(abs(wp.transform.rotation.yaw), 90)
                 if way_yaw >= 2 and way_yaw <= 88:
                     straight_road = 0
                     break
 
-            if straight_road == 1:
+            # check boundary road
+            for wp in topology:
+                dist = numpy.array([wp.transform.location.x-vertex1.x, wp.transform.location.y-vertex1.y])
+                if numpy.linalg.norm(dist, ord=2) <= wp.lane_width * 0.5:
+                    boundary_road = 0
+            
+            if straight_road == 1 and boundary_road == 1:
                 obstacle = ObstacleMsg()
                 obstacle.polygon = Polygon(points=points_list)
                 rda_obstacles.obstacles.append(obstacle)

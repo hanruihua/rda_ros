@@ -150,7 +150,7 @@ We provide the Autonomous Driving examples in Carla shown as follows. To run the
 
 - Autonomous Driving in Town02 with Topology Map and regular traffic vehicles
 
-https://github.com/user-attachments/assets/c5fb1560-cc6f-4dec-9684-e90a61135644
+https://github.com/user-attachments/assets/da8a102e-1d51-4cbd-a52c-544ba6a42ff2
 
 - Autonomous Driving in Town04 with chaos traffic
 

@@ -136,13 +136,34 @@ sh source_setup.sh && source ~/rda_ws/devel/setup.sh && rosdep install rda_ros
 
 We provide the dynamic collision avoidance examples in Gazebo shown as follows. To run these examples, please see [example/dynamic_collision_avoidance](https://github.com/hanruihua/rda_ros/tree/main/example/dynamic_collision_avoidance) for detail.
 
+- Dynamic collision avoidance with obstacles information input
+
+
+
+
+
+- Dynamic collision avoidance with scan information input
 
 
 ### Autonomous Driving
 
 We provide the Autonomous Driving examples in Carla shown as follows. To run these examples, please see [example/auto_driving](https://github.com/hanruihua/rda_ros/tree/main/example/auto_driving) for detail.
 
-https://github.com/hanruihua/rda_ros/assets/16113200/68c584eb-8a4a-4618-b0cd-d76c0ef37a1e
+- Autonomous Driving in Town02 with Topology Map and regular traffic vehicles
+
+
+
+
+
+
+
+
+- Autonomous Driving in Town04 with chaos traffic
+
+
+
+
+
 
 
 ## Citation

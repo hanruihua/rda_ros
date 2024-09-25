@@ -130,7 +130,7 @@ sh source_setup.sh && source ~/rda_ws/devel/setup.sh && rosdep install rda_ros
 | `~marker_lifetime` | `float` | `0.1`         | Lifetime of markers in RViz (in seconds).      |
 
 
-## Examples
+## Demonstration
 
 ### Dynamic collision avoidance
 

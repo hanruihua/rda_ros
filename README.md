@@ -4,7 +4,7 @@ This is the ROS Wrapper of the [RDA planner](https://github.com/hanruihua/RDA-pl
 
 ## Preqrequisite
 
-Please install the following packages first.
+Please install the following libraries and packages first.
 
 - Python >= 3.8
 - [ROS Noetic](https://wiki.ros.org/noetic)
@@ -177,13 +177,15 @@ If you find this code or paper helpful, please consider **starring** the reposit
 ```
 
 ```
-@article{li2023edge,
-  title={Edge Accelerated Robot Navigation With Collaborative Motion Planning},
-  author={Li, Guoliang and Han, Ruihua and Wang, Shuai and Gao, Fei and Eldar, Yonina C and Xu, Chengzhong},
-  journal={IEEE/ASME Transactions on Mechatronics},
+@ARTICLE{10601554,
+  author={Li, Guoliang and Han, Ruihua and Wang, Shuai and Gao, Fei and Eldar, Yonina C. and Xu, Chengzhong},
+  journal={IEEE/ASME Transactions on Mechatronics}, 
+  title={Edge Accelerated Robot Navigation With Collaborative Motion Planning}, 
   year={2024},
-  publisher={IEEE}
-}
+  volume={},
+  number={},
+  pages={1-13},
+  doi={10.1109/TMECH.2024.3419436}}
 ```
 
 ## Known Issues
@@ -191,7 +193,15 @@ If you find this code or paper helpful, please consider **starring** the reposit
 - RDA Planner is an optimization-based planner. Better performance can be achieved with a more powerful computer, especially when running with the CARLA and Gazebo simulators.
 - If your computer doesn't match the demo's performance, try adjusting the parameters in the RDA MPC configuration to reduce computation costs.
 - Since obstacles in some scenarios are moving and set randomly, there may be cases where the robot cannot avoid them. Adjust the parameters in the RDA MPC configuration can improve the performance.
-- This node has many parameters. We recommend using YAML files to store them and load them in the launch file, as shown in the examples. This approach simplifies adjusting parameters for different scenarios.
+- This node has many parameters. We recommend using YAML files to store them and load them in the launch file, as shown in the examples. This approach simplifies adjusting parameters for 
+different scenarios.
+
+## Acknowledgement
+
+- [limo_ros](https://github.com/agilexrobotics/limo_ros)
+- [Carla](https://carla.org/)
+- [Carla-ROS-bridge](https://github.com/carla-simulator/ros-bridge)
+- [Gazebo](https://gazebosim.org/home)
 
 ## Contact
 

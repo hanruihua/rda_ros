@@ -53,7 +53,7 @@ We provide the Autonomous Driving examples in Carla shown as follows. To run the
 
 https://github.com/user-attachments/assets/da8a102e-1d51-4cbd-a52c-544ba6a42ff2
 
-- Autonomous Driving in Town04 with chaos traffic
+- Autonomous Driving in Town04 with traffic chaos 
 
 https://github.com/user-attachments/assets/b0961e1b-3c41-4b42-886e-668455612bb9
 

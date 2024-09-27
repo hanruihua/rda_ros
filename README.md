@@ -4,7 +4,7 @@ This is the ROS Wrapper of the [RDA planner](https://github.com/hanruihua/RDA-pl
 
 ## Preqrequisite
 
-Please install the following packages first.
+Please install the following libraries and packages first.
 
 - Python >= 3.8
 - [ROS Noetic](https://wiki.ros.org/noetic)
@@ -13,6 +13,7 @@ Please install the following packages first.
 *Note: We recommend using Python 3.8 and Conda to manage Python environments, as some examples are based on CARLA.*
 
 ## Test Environment 
+
 - Ubuntu 20.04
 
 ## Installation
@@ -27,6 +28,34 @@ cd ~/rda_ws && catkin_make
 cd ~/rda_ws/src/rda_ros 
 sh source_setup.sh && source ~/rda_ws/devel/setup.sh && rosdep install rda_ros 
 ```
+
+
+## Demonstration
+
+### Dynamic collision avoidance
+
+We provide the dynamic collision avoidance examples in Gazebo shown as follows. To run these examples, please see [example/dynamic_collision_avoidance](https://github.com/hanruihua/rda_ros/tree/main/example/dynamic_collision_avoidance) for detail.
+
+- Dynamic collision avoidance with obstacles information input
+
+https://github.com/user-attachments/assets/1e0184b0-3a3f-499d-a577-10f8d1d28b0b
+
+- Dynamic collision avoidance with scan information input
+
+https://github.com/user-attachments/assets/60781585-b627-43f3-86b4-7c68e6f66909
+
+
+### Autonomous Driving
+
+We provide the Autonomous Driving examples in Carla shown as follows. To run these examples, please see [example/auto_driving](https://github.com/hanruihua/rda_ros/tree/main/example/auto_driving) for detail.
+
+- Autonomous Driving in Town02 with Topology Map and regular traffic vehicles
+
+https://github.com/user-attachments/assets/da8a102e-1d51-4cbd-a52c-544ba6a42ff2
+
+- Autonomous Driving in Town04 with traffic chaos 
+
+https://github.com/user-attachments/assets/b0961e1b-3c41-4b42-886e-668455612bb9
 
 ## Node API
 
@@ -130,33 +159,6 @@ sh source_setup.sh && source ~/rda_ws/devel/setup.sh && rosdep install rda_ros
 | `~marker_lifetime` | `float` | `0.1`         | Lifetime of markers in RViz (in seconds).      |
 
 
-## Demonstration
-
-### Dynamic collision avoidance
-
-We provide the dynamic collision avoidance examples in Gazebo shown as follows. To run these examples, please see [example/dynamic_collision_avoidance](https://github.com/hanruihua/rda_ros/tree/main/example/dynamic_collision_avoidance) for detail.
-
-- Dynamic collision avoidance with obstacles information input
-
-https://github.com/user-attachments/assets/1e0184b0-3a3f-499d-a577-10f8d1d28b0b
-
-- Dynamic collision avoidance with scan information input
-
-https://github.com/user-attachments/assets/60781585-b627-43f3-86b4-7c68e6f66909
-
-
-### Autonomous Driving
-
-We provide the Autonomous Driving examples in Carla shown as follows. To run these examples, please see [example/auto_driving](https://github.com/hanruihua/rda_ros/tree/main/example/auto_driving) for detail.
-
-- Autonomous Driving in Town02 with Topology Map and regular traffic vehicles
-
-https://github.com/user-attachments/assets/da8a102e-1d51-4cbd-a52c-544ba6a42ff2
-
-- Autonomous Driving in Town04 with chaos traffic
-
-https://github.com/user-attachments/assets/b0961e1b-3c41-4b42-886e-668455612bb9
-
 ## Citation
 
 If you find this code or paper helpful, please consider **starring** the repository and **citing** our work using the following BibTeX entries:
@@ -175,13 +177,15 @@ If you find this code or paper helpful, please consider **starring** the reposit
 ```
 
 ```
-@article{li2023edge,
-  title={Edge Accelerated Robot Navigation With Collaborative Motion Planning},
-  author={Li, Guoliang and Han, Ruihua and Wang, Shuai and Gao, Fei and Eldar, Yonina C and Xu, Chengzhong},
-  journal={IEEE/ASME Transactions on Mechatronics},
+@ARTICLE{10601554,
+  author={Li, Guoliang and Han, Ruihua and Wang, Shuai and Gao, Fei and Eldar, Yonina C. and Xu, Chengzhong},
+  journal={IEEE/ASME Transactions on Mechatronics}, 
+  title={Edge Accelerated Robot Navigation With Collaborative Motion Planning}, 
   year={2024},
-  publisher={IEEE}
-}
+  volume={},
+  number={},
+  pages={1-13},
+  doi={10.1109/TMECH.2024.3419436}}
 ```
 
 ## Known Issues
@@ -189,7 +193,14 @@ If you find this code or paper helpful, please consider **starring** the reposit
 - RDA Planner is an optimization-based planner. Better performance can be achieved with a more powerful computer, especially when running with the CARLA and Gazebo simulators.
 - If your computer doesn't match the demo's performance, try adjusting the parameters in the RDA MPC configuration to reduce computation costs.
 - Since obstacles in some scenarios are moving and set randomly, there may be cases where the robot cannot avoid them. Adjust the parameters in the RDA MPC configuration can improve the performance.
-- This node has many parameters. We recommend using YAML files to store them and load them in the launch file, as shown in the examples. This approach simplifies adjusting parameters for different scenarios.
+- To manage the many parameters for this node, we recommend using YAML files to store them and loading them in the launch file, as shown in the demonstrations. 
+
+## Acknowledgement
+
+- [limo_ros](https://github.com/agilexrobotics/limo_ros)
+- [Carla](https://carla.org/)
+- [Carla-ROS-bridge](https://github.com/carla-simulator/ros-bridge)
+- [Gazebo](https://gazebosim.org/home)
 
 ## Contact
 

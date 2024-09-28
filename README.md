@@ -10,7 +10,8 @@ Please install the following libraries and packages first.
 - [ROS Noetic](https://wiki.ros.org/noetic)
 - [RDA_planner](https://github.com/hanruihua/RDA_planner)
 
-*Note: We recommend using Python 3.8 and Conda to manage Python environments, as some examples are based on CARLA.*
+> [!NOTE]
+> *We recommend using Python 3.8 and Conda to manage Python environments, as some examples are based on CARLA.*
 
 ## Test Environment 
 
